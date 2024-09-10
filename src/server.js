@@ -6,7 +6,9 @@ const app = express();
 conectarDB();
 
 //Middlewares
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:4200'
+}));
 app.use(express.json());
 
 //Routes
