@@ -3,25 +3,25 @@ const usuarioModel = require('../models/usuario.model');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-exports.registroUsuario = async(req, res) => {
+exports.registroUsuario = async (req, res) => {
     try {
         const { email, password } = req.body;
-         // Verificar que la contraseña esté presente
-         if (!password) {
+        // Verificar que la contraseña esté presente
+        if (!password) {
             return res.status(400).json({ mensaje: 'La contraseña es obligatoria' });
         }
         //validacion si el usuario existe
-        const existeUsuario = await usuarioModel.findOne({email});
-        if (existeUsuario){
-            return res.status(400).send({mensaje: 'Usuario ya existe'});
+        const existeUsuario = await usuarioModel.findOne({ email });
+        if (existeUsuario) {
+            return res.status(400).send({ mensaje: 'Usuario ya existe' });
         }
         // encriptar contaseña
         const passwordEncriptado = await bcrypt.hash(password, 10)
         //creacion de usuario
-        const usuario = new usuarioModel({...req.body, password: passwordEncriptado});
-       // Guardar el usuario en la base de datos
+        const usuario = new usuarioModel({ ...req.body, password: passwordEncriptado });
+        // Guardar el usuario en la base de datos
         await usuario.save();
-        res.status(201).send({ mensaje: 'Usuario creado correctamente', usuario});
+        res.status(201).send({ mensaje: 'Usuario creado correctamente', usuario });
     } catch (error) {
         console.log(error);
         res.status(500).send("Hubo un problema al crear el usuario");

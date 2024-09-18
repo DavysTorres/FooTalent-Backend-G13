@@ -6,10 +6,7 @@ const UsuarioSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    apodo: {
-        type: String,
-        required: true
-    },
+
     genero: {
         type: String,
         required: true
@@ -27,26 +24,10 @@ const UsuarioSchema = mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['adulto', 'familia', 'terapeuta'],
+        enum: ['admin', 'Profesor', 'Estudiante'],
         required: true
     },
     numero_identificacion: {
-        type: String,
-        required: true
-    },
-    eps: {
-        type: String,
-        required: true
-    },
-    fecha_nacimiento: {
-        type: Date,
-        required: true
-    },
-    pais: {
-        type: String,
-        required: true
-    },
-    ciudad: {
         type: String,
         required: true
     }
