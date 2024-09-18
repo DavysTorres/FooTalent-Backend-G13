@@ -4,16 +4,10 @@ const mongoose = require('mongoose');
 const UsuarioSchema = mongoose.Schema({
     nombre: {
         type: String,
-        required: true
+        required: false
     },
-    apodo: {
-        type: String,
-        required: true
-    },
-    genero: {
-        type: String,
-        required: true
-    },
+   
+   
     email: {
         type: String,
         required: true
@@ -27,28 +21,25 @@ const UsuarioSchema = mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['adulto', 'familia', 'terapeuta'],
-        required: true
+        enum: ['administrador', 'docente', 'estudiante'],
+        required: false
     },
     numero_identificacion: {
         type: String,
-        required: true
+        required: false
     },
-    eps: {
-        type: String,
-        required: true
-    },
+    
     fecha_nacimiento: {
         type: Date,
-        required: true
+        required: false
     },
     pais: {
         type: String,
-        required: true
+        required: false
     },
     ciudad: {
         type: String,
-        required: true
+        required: false
     }
 }, {
     versionKey: false,
