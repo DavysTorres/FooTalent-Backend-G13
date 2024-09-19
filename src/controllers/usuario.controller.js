@@ -4,6 +4,10 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const usuarioService = require('../services/usuario.service');
+const {
+        requestPasswordReset,
+        resetPassword,
+      } = require("../services/auth.service");
 
 exports.registroUsuario = async (req, res, next) => {
   
@@ -29,3 +33,23 @@ exports.consultarUsuario = async (req, res) => {
         return res.json(consultar);
    
 };
+
+ exports.resetPasswordRequestController1 = async (req, res, next) => {
+        const requestPasswordResetService = await requestPasswordReset(
+          req.body.email
+        );
+        return res.json(requestPasswordResetService);
+      };
+      
+
+exports.resetPasswordController1 = async (req, res, next) => {
+        const resetPasswordService = await resetPassword(
+          req.body.userId,
+          req.body.token,
+          req.body.password
+        );
+        return res.json(resetPasswordService);
+      };
+      
+   
+      
