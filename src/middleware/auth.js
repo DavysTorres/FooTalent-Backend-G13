@@ -1,5 +1,6 @@
 //cSpell: disable
 const jwt = require('jsonwebtoken');
+const JWTSecret = process.env.JWT_SECRET;
 
 const verificarToken = (req, res, next) => {
     // Obtén el token del header Authorization
@@ -9,7 +10,7 @@ const verificarToken = (req, res, next) => {
         return res.status(401).json({ mensaje: 'Token no proporcionado' });
     }
 
-    jwt.verify(token, 'key_secreto', (err, decoded) => {
+    jwt.verify(token, JWTSecret, (err, decoded) => {
         if (err) {
             return res.status(403).json({ mensaje: 'Token no válido' });
         }

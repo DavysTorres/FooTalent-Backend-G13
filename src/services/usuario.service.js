@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Token = require("../models/Token.model");
 const sendEmail = require("../utils/email/sendEmail");
-const User = require("../models/usuario.model");
 const crypto = require("crypto");
 
 const JWTSecret = process.env.JWT_SECRET;
@@ -54,7 +53,7 @@ exports.loginUsuario = async ({ email, password }) => {
         }
 
         // Crear y firmar un token
-        const token = jwt.sign({ usuarioId: usuario._id, role: usuario.role }, 'key_secreto', { expiresIn: '1h' });
+        const token = jwt.sign({ usuarioId: usuario._id, role: usuario.role }, JWTSecret, { expiresIn: '1h' });
 
         return { status: 200, mensaje: 'Login exitoso', data: { token, usuario: { id: usuario._id, nombre: usuario.nombre, email: usuario.email, role: usuario.role } } };
     } catch (error) {
@@ -84,7 +83,7 @@ exports.consultarUsuario = async ({ usuarioId }) => {
 };
 
 exports.requestPasswordReset = async (email) => {
-    const user = await User.findOne({ email });
+    const user = await usuarioModel.findOne({ email });
     if (!user) throw new Error("Email does not exist");
   
     let token = await Token.findOne({ userId: user._id });
@@ -129,13 +128,13 @@ exports.resetPassword = async (userId, token, password) => {
       
         const hash = await bcrypt.hash(password, Number(bcryptSalt));
       
-        await User.updateOne(
+        await usuarioModel.updateOne(
           { _id: userId },
           { $set: { password: hash } },
           { new: true }
         );
       
-        const user = await User.findById({ _id: userId });
+        const user = await usuarioModel.findById({ _id: userId });
       
         sendEmail(
           user.email,
