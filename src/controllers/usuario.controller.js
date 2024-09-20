@@ -1,8 +1,6 @@
 //cSpell: disable
-const usuarioModel = require('../models/usuario.model');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 
+<<<<<<< HEAD
 exports.registroUsuario = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -27,49 +25,52 @@ exports.registroUsuario = async (req, res) => {
         res.status(500).send("Hubo un problema al crear el usuario");
     }
 }
+=======
+const usuarioService = require('../services/usuario.service');
+
+
+exports.registroUsuario = async (req, res, next) => {
+  
+        const registro = await usuarioService.registrarUsuario(req.body);
+        return res.json(registro);
+       
+   
+};
+
+>>>>>>> 290483f39ac0bcd14735d97d9f67d5b055365561
 
 // Inicio de sesión
-exports.loginUsuario = async (req, res) => {
-    try {
-        const { email, password } = req.body;
-
-        // Buscar al usuario por email
-        const usuario = await usuarioModel.findOne({ email });
-        if (!usuario) {
-            return res.status(400).json({ mensaje: 'Email o contraseña incorrectos' });
-        }
-
-        // Verificar la contraseña
-        const passwordCorrecto = await bcrypt.compare(password, usuario.password);
-        if (!passwordCorrecto) {
-            return res.status(400).json({ mensaje: 'Email o contraseña incorrectos' });
-        }
-
-        // Crear y firmar un token
-        const token = jwt.sign({ usuarioId: usuario._id, role: usuario.role }, 'key_secreto', { expiresIn: '1h' });
-
-        res.json({ token, usuario: { id: usuario._id, nombre: usuario.nombre, email: usuario.email, role: usuario.role } });
-    } catch (error) {
-        res.status(500).json({ error: error.mensaje });
-    }
+exports.loginUsuario = async (req, res, next) => {
+   
+        const login = await usuarioService.loginUsuario(req.body);
+        return res.json(login);
+  
 };
 
 // Obtener perfil de usuario (requiere autenticación)
 exports.consultarUsuario = async (req, res) => {
-    try {
-        // Asegúrate de que req.usuario.usuarioId esté correctamente definido
-        if (!req.usuario || !req.usuario.usuarioId) {
-            return res.status(400).json({ mensaje: 'Usuario no autenticado' });
-        }
-
-        const usuario = await usuarioModel.findById(req.usuario.usuarioId);
-        if (!usuario) {
-            return res.status(404).json({ mensaje: 'Usuario no encontrado' });
-        }
-
-        res.json({ id: usuario._id, nombre: usuario.nombre, email: usuario.email, role: usuario.role });
-    } catch (error) {
-        console.error(error); // Asegúrate de ver el error en los logs
-        res.status(500).json({ error: 'Hubo un problema al consultar el usuario' });
-    }
+    
+        const consultar = await usuarioService.consultarUsuario(req.usuario);
+        return res.json(consultar);
+   
 };
+
+ exports.resetPasswordRequestController1 = async (req, res, next) => {
+        const requestPasswordResetService = await usuarioService.requestPasswordReset(
+          req.body.email
+        );
+        return res.json(requestPasswordResetService);
+      };
+      
+
+exports.resetPasswordController1 = async (req, res, next) => {
+        const resetPasswordService = await usuarioService.resetPassword(
+          req.body.userId,
+          req.body.token,
+          req.body.password
+        );
+        return res.json(resetPasswordService);
+      };
+      
+   
+      

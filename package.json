@@ -15,9 +15,14 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "handlebars": "^4.7.8",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.6.1",
+<<<<<<< HEAD
     "yarn": "^1.22.22"
+=======
+    "nodemailer": "^6.9.15"
+>>>>>>> 290483f39ac0bcd14735d97d9f67d5b055365561
   },
   "devDependencies": {
     "nodemon": "^3.1.4"
