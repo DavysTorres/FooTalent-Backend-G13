@@ -70,6 +70,12 @@ exports.loginUsuario = async ({ email, password }) => {
             return { status: 400, mensaje: 'Email o contraseña incorrectos' };
         }
 
+        //Verificar si se verifico la cuenta
+
+        if(usuario.verificado==undefined || !usuario.verificado){
+          return { status: 400, mensaje: 'Cuenta no verificada' };
+        }
+
         // Crear y firmar un token
         const token = jwt.sign({ usuarioId: usuario._id, role: usuario.role }, JWTSecret, { expiresIn: '1h' });
 
