@@ -36,3 +36,9 @@ exports.resetPasswordController1 = async (req, res, next) => {
         );
         return res.json(resetPasswordService);
 };
+
+exports.verificarCuenta = async (req, res) => {
+        const { token } = req.query;
+        const resultado = await usuarioService.verificarCuenta(token);
+        res.status(resultado.status).send(resultado.mensaje);
+    };

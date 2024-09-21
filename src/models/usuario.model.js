@@ -23,8 +23,13 @@ const UsuarioSchema = mongoose.Schema({
     role: {
         type: String,
         enum: ['admin', 'Docente', 'Aprendiz'],
-        required: true
+        required: false
+    },
+    verificado: {
+        type: Boolean,
+        required: false
     }
+    
 }, {
     versionKey: false,
     timestamps: true

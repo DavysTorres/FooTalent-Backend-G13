@@ -9,7 +9,7 @@ const JWTSecret = process.env.JWT_SECRET;
 const bcryptSalt = process.env.BCRYPT_SALT;
 const clientURL = process.env.CLIENT_URL;
 
-exports.registrarUsuario = async ({ email, password }) => {
+exports.registrarUsuario = async ({nombre, email, password }) => {
     try {
         // Verificar que la contraseña esté presente
         if (!password) {
@@ -26,12 +26,30 @@ exports.registrarUsuario = async ({ email, password }) => {
         const passwordEncriptado = await bcrypt.hash(password, 10);
 
         // Creación de usuario
-        const usuario = new usuarioModel({ email, password: passwordEncriptado });
+        const usuario = new usuarioModel({nombre, email, password: passwordEncriptado });
 
         // Guardar el usuario en la base de datos
-        await usuario.save();
+        
 
-        return { status: 201, mensaje: 'Usuario creado correctamente', data: usuario };
+        const token = jwt.sign({ email }, 'tu_secreto', { expiresIn: '1h' });
+
+        const link = `${clientURL}/verificarCuenta?token=${token}`;
+
+
+
+        sendEmail(
+          usuario.email,
+          "Confirmar cuenta",
+          {
+            name: usuario.nombre,
+            link: link,
+          },
+          "./template/confirmarCuenta.handlebars"
+        );
+        await usuario.save();
+     
+
+        return { status: 201, mensaje: 'Usuario creado correctamente. Revisa tu email para verificar la cuenta.', data: usuario };
     } catch (error) {
         console.log(error);
         return { status: 500, mensaje: 'Hubo un problema al crear el usuario' };
@@ -103,7 +121,7 @@ exports.requestPasswordReset = async (email) => {
         user.email,
         "Password Reset Request",
         {
-          name: user.name,
+          name: user.nombre,
           link: link,
         },
         "./template/requestResetPassword.handlebars"
@@ -140,7 +158,7 @@ exports.resetPassword = async (userId, token, password) => {
           user.email,
           "Password Reset Successfully",
           {
-            name: user.name,
+            name: user.nombre,
           },
           "./template/resetPassword.handlebars"
         );
@@ -150,4 +168,23 @@ exports.resetPassword = async (userId, token, password) => {
         return { message: "Password reset was successful" };
       };
 
+
+exports.verificarCuenta = async (token) => {
+    try {
+        console.log(token)
+        const { email } = jwt.verify(token, 'tu_secreto');
+
+        const usuario = await usuarioModel.findOne({ email });
+        if (!usuario) {
+            return { status: 400, mensaje: 'Usuario no encontrado' };
+        }
+
+        usuario.verificado = true;
+        await usuario.save();
+
+        return { status: 200, mensaje: 'Cuenta verificada correctamente' };
+    } catch (error) {
+        return { status: 400, mensaje: 'Token inválido o expirado' };
+    }
+};
    

@@ -11,4 +11,6 @@ router.get('/listar-usuario',  verificarToken, usuarioController.consultarUsuari
 router.post("/requestResetPassword", usuarioController.resetPasswordRequestController1);
 router.post("/resetPassword", usuarioController.resetPasswordController1);
 
+router.get('/verificar', usuarioController.verificarCuenta);
+
 module.exports = router;
