@@ -32,9 +32,9 @@ exports.registrarUsuario = async (datoUsuario) => {
         // Guardar el usuario en la base de datos
         
 
-        const token = jwt.sign({ email }, 'tu_secreto', { expiresIn: '1h' });
+        const token = jwt.sign({ email }, JWTSecret, { expiresIn: '1h' });
 
-        const link = `${clientURL}/verificarCuenta?token=${token}`;
+        const link = `${clientURL}/api/usuario/verificarCuenta?token=${token}`;
 
 
 
@@ -142,25 +142,18 @@ exports.resetPassword = async (userId, token, password) => {
         if (!passwordResetToken) {
           throw new Error("Invalid or expired password reset token");
         }
-      
-        console.log(passwordResetToken.token, token);
-      
         const isValid = await bcrypt.compare(token, passwordResetToken.token);
       
         if (!isValid) {
           throw new Error("Invalid or expired password reset token");
         }
-      
         const hash = await bcrypt.hash(password, Number(bcryptSalt));
-      
         await usuarioModel.updateOne(
           { _id: userId },
           { $set: { password: hash } },
           { new: true }
         );
-      
         const user = await usuarioModel.findById({ _id: userId });
-      
         sendEmail(
           user.email,
           "Password Reset Successfully",
@@ -169,26 +162,20 @@ exports.resetPassword = async (userId, token, password) => {
           },
           "./template/resetPassword.handlebars"
         );
-      
         await passwordResetToken.deleteOne();
-      
         return { message: "Password reset was successful" };
       };
 
 
 exports.verificarCuenta = async (token) => {
     try {
-        console.log(token)
-        const { email } = jwt.verify(token, 'tu_secreto');
-
+        const { email } = jwt.verify(token, JWTSecret);
         const usuario = await usuarioModel.findOne({ email });
         if (!usuario) {
             return { status: 400, mensaje: 'Usuario no encontrado' };
         }
-
         usuario.verificado = true;
         await usuario.save();
-
         return { status: 200, mensaje: 'Cuenta verificada correctamente' };
     } catch (error) {
         return { status: 400, mensaje: 'Token inválido o expirado' };
