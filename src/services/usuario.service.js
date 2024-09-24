@@ -30,14 +30,11 @@ exports.registrarUsuario = async (datoUsuario) => {
         const usuario = new usuarioModel({nombre, email, password: passwordEncriptado, role });
 
         // Guardar el usuario en la base de datos
-        
-
         const token = jwt.sign({ email }, JWTSecret, { expiresIn: '1h' });
 
         const link = `${clientURL}/api/usuario/verificarCuenta?token=${token}`;
 
-
-
+        
         sendEmail(
           usuario.email,
           "Confirmar cuenta",
