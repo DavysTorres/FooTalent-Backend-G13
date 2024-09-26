@@ -27,12 +27,17 @@ const UsuarioSchema = mongoose.Schema({
     },
     verificado: {
         type: Boolean,
-        required: false
+        default: false
     }
 
-}, {
-    versionKey: false,
-    timestamps: true
-});
+
+
+},
+
+
+    {
+        versionKey: false,
+        timestamps: true
+    });
 
 module.exports = mongoose.model('usuario', UsuarioSchema);
