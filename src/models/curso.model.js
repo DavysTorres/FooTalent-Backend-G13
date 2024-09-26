@@ -1,7 +1,7 @@
 //cSpell: disable
 const mongoose = require('mongoose');
-
-const CursoSchema = mongoose.Schema({
+const Schema = mongoose.Schema;
+const CursoSchema = new Schema({
 
     titulo: {
         type: String,
@@ -16,7 +16,7 @@ const CursoSchema = mongoose.Schema({
         ref: 'usuario',
         required: true
     },
-    videos: [VideoSchema],
+    //videos: [VideoSchema],
     estudiantes: [{
         type: Schema.Types.ObjectId,
         ref: 'usuario'
