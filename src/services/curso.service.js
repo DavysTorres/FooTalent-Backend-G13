@@ -37,3 +37,11 @@ exports.editarCurso = async(id, datoCurso) => {
   }
  
 }
+exports.eliminarCurso= async(id) =>{
+  const cursoEliminado = await cursoModel.findByIdAndUpdate(id, { activo: false }, { new: true });{
+    if (!cursoEliminado) {
+      return { status: 404, mensaje: "Curso no encontrado" };
+    }
+    return { status: 200, mensaje: "Eliminicación del curso exitosa", data: cursoEliminado };
+  }
+}

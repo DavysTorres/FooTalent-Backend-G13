@@ -27,8 +27,9 @@ const UsuarioSchema = mongoose.Schema({
     },
     verificado: {
         type: Boolean,
-        required: false
-    }
+        default:false
+    },
+  
     
 }, {
     versionKey: false,
