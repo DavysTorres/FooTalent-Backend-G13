@@ -9,7 +9,7 @@ const JWTSecret = process.env.JWT_SECRET;
 const bcryptSalt = process.env.BCRYPT_SALT;
 const clientURL = process.env.CLIENT_URL;
 
-exports.registrarUsuario = async ({ email, password }) => {
+exports.registrarUsuario = async ({ nombre, email, password, role }) => {
     try {
         // Verificar que la contraseña esté presente
         if (!password) {
@@ -26,7 +26,7 @@ exports.registrarUsuario = async ({ email, password }) => {
         const passwordEncriptado = await bcrypt.hash(password, 10);
 
         // Creación de usuario
-        const usuario = new usuarioModel({ email, password: passwordEncriptado });
+        const usuario = new usuarioModel({ nombre, email, password: passwordEncriptado, role });
 
         // Guardar el usuario en la base de datos
         await usuario.save();
