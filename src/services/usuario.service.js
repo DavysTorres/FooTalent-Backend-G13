@@ -9,7 +9,8 @@ const JWTSecret = process.env.JWT_SECRET;
 const bcryptSalt = process.env.BCRYPT_SALT;
 const clientURL = process.env.CLIENT_URL;
 
-exports.registrarUsuario = async ({ nombre, email, password, role }) => {
+exports.registrarUsuario = async (datoUsuario) => {
+    const {nombre, email, password, role }=datoUsuario;
     try {
         // Verificar que la contraseña esté presente
         if (!password) {
@@ -26,15 +27,30 @@ exports.registrarUsuario = async ({ nombre, email, password, role }) => {
         const passwordEncriptado = await bcrypt.hash(password, 10);
 
         // Creación de usuario
-        const usuario = new usuarioModel({ nombre, email, password: passwordEncriptado, role });
+        const usuario = new usuarioModel({ email, password: passwordEncriptado });
 
         // Guardar el usuario en la base de datos
-        await usuario.save();
+        const token = jwt.sign({ email }, JWTSecret, { expiresIn: '1h' });
 
-        return { status: 201, mensaje: 'Usuario creado correctamente', data: usuario };
+        const link = `${clientURL}/api/usuario/verificarCuenta?token=${token}`;
+
+        
+        sendEmail(
+          usuario.email,
+          "Confirmar cuenta",
+          {
+            name: usuario.nombre,
+            link: link,
+          },
+          "./template/confirmarCuenta.handlebars"
+        );
+        await usuario.save();
+     
+
+        return { status: 201, mensaje: 'Usuario creado correctamente. Revisa tu email para verificar la cuenta.', data: usuario };
     } catch (error) {
         console.log(error);
-        return { status: 500, mensaje: 'Hubo un problema al crear el usuario' };
+        return { status: 500, mensaje: error.message };
     }
 };
 
@@ -50,6 +66,12 @@ exports.loginUsuario = async ({ email, password }) => {
         const passwordCorrecto = await bcrypt.compare(password, usuario.password);
         if (!passwordCorrecto) {
             return { status: 400, mensaje: 'Email o contraseña incorrectos' };
+        }
+
+        //Verificar si se verifico la cuenta
+
+        if(usuario.verificado==undefined || !usuario.verificado){
+          return { status: 400, mensaje: 'Cuenta no verificada' };
         }
 
         // Crear y firmar un token
@@ -103,7 +125,7 @@ exports.requestPasswordReset = async (email) => {
         user.email,
         "Password Reset Request",
         {
-          name: user.name,
+          name: user.nombre,
           link: link,
         },
         "./template/requestResetPassword.handlebars"
@@ -117,37 +139,43 @@ exports.resetPassword = async (userId, token, password) => {
         if (!passwordResetToken) {
           throw new Error("Invalid or expired password reset token");
         }
-      
-        console.log(passwordResetToken.token, token);
-      
         const isValid = await bcrypt.compare(token, passwordResetToken.token);
       
         if (!isValid) {
           throw new Error("Invalid or expired password reset token");
         }
-      
         const hash = await bcrypt.hash(password, Number(bcryptSalt));
-      
         await usuarioModel.updateOne(
           { _id: userId },
           { $set: { password: hash } },
           { new: true }
         );
-      
         const user = await usuarioModel.findById({ _id: userId });
-      
         sendEmail(
           user.email,
           "Password Reset Successfully",
           {
-            name: user.name,
+            name: user.nombre,
           },
           "./template/resetPassword.handlebars"
         );
-      
         await passwordResetToken.deleteOne();
-      
         return { message: "Password reset was successful" };
       };
 
+
+exports.verificarCuenta = async (token) => {
+    try {
+        const { email } = jwt.verify(token, JWTSecret);
+        const usuario = await usuarioModel.findOne({ email });
+        if (!usuario) {
+            return { status: 400, mensaje: 'Usuario no encontrado' };
+        }
+        usuario.verificado = true;
+        await usuario.save();
+        return { status: 200, mensaje: 'Cuenta verificada correctamente' };
+    } catch (error) {
+        return { status: 400, mensaje: 'Token inválido o expirado' };
+    }
+};
    

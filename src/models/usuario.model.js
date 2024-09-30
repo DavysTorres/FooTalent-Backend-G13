@@ -6,7 +6,6 @@ const UsuarioSchema = mongoose.Schema({
         type: String,
         required: true
     },
-
     email: {
         type: String,
         trim: true,
@@ -22,18 +21,23 @@ const UsuarioSchema = mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['admin', 'Docente', 'Aprendiz'],
+        enum: ['Admin', 'Docente', 'Aprendiz'],
+        default: 'Aprendiz',
         required: true
+    },
+    verificado: {
+        type: Boolean,
+        default: false
     }
-}, {
-    versionKey: false,
-    timestamps: true
-});
+
+
+
+},
+
+
+    {
+        versionKey: false,
+        timestamps: true
+    });
 
 module.exports = mongoose.model('usuario', UsuarioSchema);
-
-/* 
-
-
-
-*/
