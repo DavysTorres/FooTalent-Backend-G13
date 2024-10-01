@@ -18,8 +18,8 @@ exports.mostrarCursoPorId = async (req, res) => {
     return res.json(curso);
 };
 
-exports.mostrarCursoPorRol = async (req, res) => {
-    const curso = await cursoService.mostrarCursosPorRol(req.params.id);
+exports.mostrarCursosPorUsuario = async (req, res) => {
+    const curso = await cursoService.mostrarCursosPorUsuario(req.params.id);
     return res.json(curso);
 };
 
