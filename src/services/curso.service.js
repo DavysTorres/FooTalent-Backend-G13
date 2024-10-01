@@ -1,4 +1,5 @@
 const cursoModel = require('../models/curso.model');
+const usuarioModel = require('../models/usuario.model');
 
 
 exports.crearCurso = async (datoCurso) => {
@@ -19,6 +20,44 @@ exports.mostrarCursos = async() =>{
     return { status: 200, mensaje: "Mostrar cursos exitoso", data: cursos };
   } catch (error) {
     return {status:500, mensaje: error.message};
+  }
+}
+exports.mostrarCursoPorId = async (cursoId) => {
+  try {
+    const curso = await cursoModel.findById(cursoId).populate('profesorId').populate('estudiantes');
+    if (!curso) {
+      return { status: 404, mensaje: "Curso no encontrado" };
+    }
+    return { status: 200, mensaje: "Mostrar curso exitoso", data: curso };
+  } catch (error) {
+    return { status: 500, mensaje: error.message };
+  }
+};
+
+
+exports.mostrarCursosPorRol= async (id)=>{
+
+  try {
+    const usuario = await usuarioModel.findById(id); // Obtener el usuario de la base de datos
+
+    if (!usuario) {
+      return { mensaje: 'Usuario no encontrado' };
+    }
+
+    switch (usuario.role) {
+      case 'Aprendiz':
+        // Obtener cursos suscritos por el estudiante
+        const cursosEstudiante = await cursoModel.find({ estudiantes: id }).populate('profesorId');
+        return { data: cursosEstudiante };
+      case 'Docente':
+        // Obtener cursos creados por el profesor
+        const cursosProfesor = await cursoModel.find({ profesorId: id });
+        return { data: cursosProfesor };
+      default:
+        return { mensaje: 'Usuario no válido' };
+    }
+  } catch (error) {
+    return { mensaje: 'Error al obtener los cursos', error: error.message };
   }
 }
 
