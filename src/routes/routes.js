@@ -4,8 +4,8 @@ const router = express.Router();
 
 //Subrutas
 const usuarioRuta = require('./usuario.route');
-//const  cursoRuta= require('curso')
 
+//const  cursoRuta= require('curso')
 
 router.use('/usuario', usuarioRuta);
 
