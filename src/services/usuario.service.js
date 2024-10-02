@@ -27,7 +27,7 @@ exports.registrarUsuario = async (datoUsuario) => {
         const passwordEncriptado = await bcrypt.hash(password, 10);
 
         // Creación de usuario
-        const usuario = new usuarioModel({nombre, email, password: passwordEncriptado, role });
+        const usuario = new usuarioModel({ nombre, email, password: passwordEncriptado, role });
 
         // Guardar el usuario en la base de datos
         const token = jwt.sign({ email }, JWTSecret, { expiresIn: '1h' });
