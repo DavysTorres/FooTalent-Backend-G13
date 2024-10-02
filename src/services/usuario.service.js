@@ -85,6 +85,24 @@ exports.loginUsuario = async ({ email, password }) => {
 };
 
 
+
+
+exports.mostrarUsuarios = async () => {
+  try {
+    const usuarios = await usuarioModel.find();
+    if(!usuarios){
+      return{mensaje: "Usuarios no encontrados"}
+    }
+    return { status: 200, mensaje: "Mostrar usuarios exitoso", data: usuarios };
+  } catch (error) {
+    return { status: 500, mensaje: error.message };
+  }
+};
+
+
+
+
+
 exports.consultarUsuario = async ({ usuarioId }) => {
     try {
         // Asegúrate de que usuarioId esté correctamente definido
@@ -178,4 +196,16 @@ exports.verificarCuenta = async (token) => {
         return { status: 400, mensaje: 'Token inválido o expirado' };
     }
 };
+
+
+
+
+exports.eliminarUsuario= async(id) =>{
+  const usuarioEliminado = await usuarioModel.findByIdAndUpdate(id, { eliminado: true }, { new: true });{
+    if (!usuarioEliminado) {
+      return { status: 404, mensaje: "usuario no encontrado" };
+    }
+    return { status: 200, mensaje: "Eliminicación del usuario exitosa", data: usuarioEliminado };
+  }
+}
    
