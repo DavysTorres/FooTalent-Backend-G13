@@ -89,7 +89,7 @@ exports.loginUsuario = async ({ email, password }) => {
 
 exports.mostrarUsuarios = async () => {
   try {
-    const usuarios = await usuarioModel.find();
+    const usuarios = await usuarioModel.find().sort({ createdAt: -1 });
     if(!usuarios){
       return{mensaje: "Usuarios no encontrados"}
     }

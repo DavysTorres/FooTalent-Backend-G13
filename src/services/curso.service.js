@@ -16,7 +16,7 @@ exports.crearCurso = async (datoCurso) => {
 exports.mostrarCursos = async() =>{
 
   try {
-    const cursos = await cursoModel.find().populate('profesorId').populate('estudiantes');
+    const cursos = await cursoModel.find().populate('profesorId').populate('estudiantes').sort({ createdAt: -1 });
     return { status: 200, mensaje: "Mostrar cursos exitoso", data: cursos };
   } catch (error) {
     return {status:500, mensaje: error.message};
@@ -47,11 +47,17 @@ exports.mostrarCursosPorUsuario= async (id)=>{
     switch (usuario.role) {
       case 'Aprendiz':
         // Obtener cursos suscritos por el estudiante
-        const cursosEstudiante = await cursoModel.find({ estudiantes: id }).populate('profesorId');
+        const cursosEstudiante = await cursoModel.find({ estudiantes: id }).populate('profesorId').sort({ createdAt: -1 });
+        if(!cursosEstudiante || cursosEstudiante.length === 0){
+          return {mensaje: "Estudiante sin cursos"}
+        }
         return { data: cursosEstudiante };
       case 'Docente':
         // Obtener cursos creados por el profesor
-        const cursosProfesor = await cursoModel.find({ profesorId: id });
+        const cursosProfesor = await cursoModel.find({ profesorId: id }).sort({ createdAt: -1 });;
+        if(!cursosProfesor || cursosProfesor.length === 0){
+          return {mensaje: "Profesor sin cursos"}
+        }
         return { data: cursosProfesor };
       default:
         return { mensaje: 'Usuario no válido' };
