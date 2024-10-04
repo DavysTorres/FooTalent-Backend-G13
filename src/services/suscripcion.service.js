@@ -42,6 +42,19 @@ exports.generarSuscripcion = async (usuarioId, cursoId) => {
       }
 }
 
-exports.encontrarSuscripcion = async () => {
+exports.encontrarSuscripciones = async (idUsuario) => {
 
+
+  try {
+
+    const suscripciones = await suscripcionModel.find({estudianteId:idUsuario}).populate('cursos').sort({ createdAt: -1 });
+
+    if(!suscripciones || suscripciones.length===0){
+      return{mensaje: "Sin suscripciones"}
+    }
+    return { status: 200, mensaje: "Mostrar suscripciones exitoso", data: suscripciones };
+  } catch (error) {
+    return {status:500, mensaje: error.message};
+  }
 }
+

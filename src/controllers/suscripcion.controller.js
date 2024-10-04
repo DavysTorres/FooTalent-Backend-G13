@@ -6,3 +6,12 @@ exports.generarSuscripcion = async (req, res, next) => {
         return res.json(suscripcion);
 }
 
+
+exports.encontrarSuscripciones = async (req, res, next) => {
+ 
+    const suscripcion = await suscripcionService.encontrarSuscripciones(req.params.idUsuario);
+
+        return res.json(suscripcion);
+}
+
+
