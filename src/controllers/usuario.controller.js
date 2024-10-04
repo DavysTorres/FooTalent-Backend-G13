@@ -56,3 +56,8 @@ exports.eliminarUsuario = async (req, res) => {
         const usuario = await usuarioService.eliminarUsuario(req.params.id);
         return res.json(usuario);
 }
+
+exports.editarUsuario = async (req, res) => {
+        const usuario = await usuarioService.editarUsuario(req.params.id, req.body);
+        return res.json(usuario);
+}

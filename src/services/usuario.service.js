@@ -208,4 +208,18 @@ exports.eliminarUsuario= async(id) =>{
     return { status: 200, mensaje: "Eliminicación del usuario exitosa", data: usuarioEliminado };
   }
 }
+
+exports.editarUsuario= async(id, datoUsuario) =>{
+  try {
+    const usuarioActualizado = await usuarioModel.findByIdAndUpdate(id, datoUsuario, { new: true });
+
+    if (!usuarioActualizado) {
+      return { status: 404, mensaje: "Usuario no encontrado" };
+    }
+
+    return { status: 200, mensaje: "Edición del usuario exitosa", data: usuarioActualizado };
+  } catch (error) {
+    return { status: 500, mensaje: error.message };
+  }
+}
    
