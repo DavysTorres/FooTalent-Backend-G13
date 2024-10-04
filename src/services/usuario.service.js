@@ -9,6 +9,7 @@ const JWTSecret = process.env.JWT_SECRET;
 const bcryptSalt = process.env.BCRYPT_SALT;
 const clientURL = process.env.CLIENT_URL;
 
+
 exports.registrarUsuario = async (datoUsuario) => {
     const {nombre, email, password, role }=datoUsuario;
     try {
@@ -209,9 +210,10 @@ exports.eliminarUsuario= async(id) =>{
   }
 }
 
-exports.editarUsuario= async(id, datoUsuario) =>{
+exports.editarUsuario= async(id, datoUsuario, avatar) =>{
+  
   try {
-    const usuarioActualizado = await usuarioModel.findByIdAndUpdate(id, datoUsuario, { new: true });
+    const usuarioActualizado = await usuarioModel.findByIdAndUpdate(id, {...datoUsuario, avatar:avatar}, { new: true });
 
     if (!usuarioActualizado) {
       return { status: 404, mensaje: "Usuario no encontrado" };
@@ -223,3 +225,8 @@ exports.editarUsuario= async(id, datoUsuario) =>{
   }
 }
    
+
+
+
+
+

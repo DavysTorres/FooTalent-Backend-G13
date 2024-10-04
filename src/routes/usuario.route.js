@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const usuarioController = require('../controllers/usuario.controller')
 const verificarToken = require('../middleware/auth');
+const { cargarImagen, resizeImage } = require('../services/cargarArchivo.service');
 
 //Muestra todos los usuarios registrados
 router.get('/listarUsuarios',  usuarioController.mostrarUsuarios);
@@ -14,7 +15,7 @@ router.get('/listar-usuario',  verificarToken, usuarioController.consultarUsuari
 //Elimina un usuario de forma logica
 router.delete('/eliminar/:id', usuarioController.eliminarUsuario);
 //Edita un usuario
-router.put('/editar/:id', usuarioController.editarUsuario)
+router.put('/editar/:id',cargarImagen.single('avatar'), usuarioController.editarUsuario)
 //Peticion para comenzar un reestablecimiento de contraseña
 router.post("/requestResetPassword", usuarioController.resetPasswordRequestController1);
 //Reestablecimiento de contraseña 

@@ -58,6 +58,7 @@ exports.eliminarUsuario = async (req, res) => {
 }
 
 exports.editarUsuario = async (req, res) => {
-        const usuario = await usuarioService.editarUsuario(req.params.id, req.body);
+        const avatar = req.file ? req.file.path : null;
+        const usuario = await usuarioService.editarUsuario(req.params.id, req.body,avatar);
         return res.json(usuario);
 }
