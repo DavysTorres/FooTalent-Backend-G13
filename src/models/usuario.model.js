@@ -32,6 +32,10 @@ const UsuarioSchema = mongoose.Schema({
     eliminado: {
         type: Boolean,
         default: false
+    },
+    descripcion:{
+        type:String,
+        required:false
     }
 
 

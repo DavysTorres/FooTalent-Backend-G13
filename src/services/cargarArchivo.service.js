@@ -1,18 +1,21 @@
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
+
 
 //logica para la subida de arhivo
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'src/uploads/');
+    const uploadPath = path.join(__dirname, '..', 'uploads');
+    cb(null, uploadPath);
   },
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}-${file.originalname}`);
   }
 });
-//Se asegura que solo se pueda subir imageness
+//Se asegura que solo se pueda subir imagenes
 const fileFilter = (req, file, cb) => {
-  const isPhoto = file.mimetype.startsWith('image/');
+  const isPhoto = file.mimetype.startsWith('image/') || file.originalname.endsWith('.jfif');
   if (isPhoto) {
     cb(null, true);
   } else {
@@ -21,7 +24,8 @@ const fileFilter = (req, file, cb) => {
 };
 
 exports.cargarImagen=multer({
-    storage:storage
+    storage:storage,
+    fileFilter
   });
 
   
@@ -40,4 +44,15 @@ exports.resizeImage = async (req, res, next) => {
       next(error);
     }
   };
-  
+
+
+  exports.borrarAntiguaFoto= async(oldAvatar) =>{
+    const oldAvatarPath = path.resolve(__dirname, oldAvatar);
+      fs.unlink(oldAvatarPath, (err) => {
+        if (err) {
+          console.error('Error al borrar la imagen antigua:', err);
+        } else {
+          console.log('Imagen antigua borrada');
+        }
+      });
+  }
