@@ -25,7 +25,8 @@ exports.mostrarCursosPorUsuario = async (req, res) => {
 
 
 exports.editarCurso = async (req, res) => {
-    const curso = await cursoService.editarCurso(req.params.id, req.body);
+    const imagen = req.file ? req.file.path : null;
+    const curso = await cursoService.editarCurso(req.params.id, req.body, imagen);
     return res.json(curso);
 };
 

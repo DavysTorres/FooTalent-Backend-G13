@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const usuarioController = require('../controllers/usuario.controller')
 const verificarToken = require('../middleware/auth');
-const { cargarImagen, resizeImage } = require('../services/cargarArchivo.service');
+const { cargarImagen} = require('../services/cargarArchivo.service');
 
 //Muestra todos los usuarios registrados
 router.get('/listarUsuarios',  usuarioController.mostrarUsuarios);

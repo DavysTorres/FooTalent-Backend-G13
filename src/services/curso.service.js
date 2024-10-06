@@ -1,5 +1,6 @@
 const cursoModel = require('../models/curso.model');
 const usuarioModel = require('../models/usuario.model');
+const cargarArchivo = require('../services/cargarArchivo.service');
 
 
 exports.crearCurso = async (datoCurso) => {
@@ -67,10 +68,20 @@ exports.mostrarCursosPorUsuario= async (id)=>{
   }
 }
 
-exports.editarCurso = async(id, datoCurso) => {
+exports.editarCurso = async(id, datoCurso, imagen) => {
 
   try {
-    const cursoActualizado = await cursoModel.findByIdAndUpdate(id, datoCurso, { new: true });
+    // Encuentra el curso actual para obtener la ruta de la imagen antiguo
+    const cursoActual = await cursoModel.findById(id);
+    if (!cursoActual) {
+      return { status: 404, mensaje: "curso no encontrado" };
+    }
+    // Si hay un nuevo avatar y un avatar antiguo, borra el antiguo
+    if (imagen && cursoActual.imagen) {
+      cargarArchivo.borrarAntiguaFoto(cursoActual.imagen)
+    }
+
+    const cursoActualizado = await cursoModel.findByIdAndUpdate(id, {...datoCurso, imagen:imagen}, { new: true });
 
     if (!cursoActualizado) {
       return { status: 404, mensaje: "Curso no encontrado" };
