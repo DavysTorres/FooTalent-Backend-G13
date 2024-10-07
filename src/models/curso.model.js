@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const CursoSchema = new Schema({
 
-    titulo: {
+    nombre: {
         type: String,
         required: true
     },
@@ -14,13 +14,13 @@ const CursoSchema = new Schema({
     imagen:{
         type:String
     },
-    profesorId: {
+    docenteId: {
         type: Schema.Types.ObjectId,
         ref: 'usuario',
         required: true
     },
     //videos: [VideoSchema],
-    estudiantes: [{
+    aprendiz: [{
         type: Schema.Types.ObjectId,
         ref: 'usuario'
     }],

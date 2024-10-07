@@ -18,14 +18,14 @@ exports.generarSuscripcion = async (usuarioId, cursoId) => {
         }
     
         // Verificar si el usuario ya está suscrito al curso
-        const suscripcionExistente = await suscripcionModel.findOne({ estudianteId:usuarioId, cursos:cursoId });
+        const suscripcionExistente = await suscripcionModel.findOne({ aprendizId:usuarioId, cursos:cursoId });
         if (suscripcionExistente) {
           return { mensaje: 'El usuario ya está suscrito a este curso' };
         }
     
         // Crear la nueva suscripción
         const nuevaSuscripcion = new suscripcionModel({
-            estudianteId:usuarioId,
+            aprendizId:usuarioId,
             cursos:cursoId,
           progreso: 0,
           fechaInicio: new Date()
@@ -33,7 +33,7 @@ exports.generarSuscripcion = async (usuarioId, cursoId) => {
         await nuevaSuscripcion.save();
     
         // Añadir el ID del usuario a la lista de estudiantes del curso
-        curso.estudiantes.push(usuarioId);
+        curso.aprendiz.push(usuarioId);
         await curso.save();
     
         return { mensaje: 'Suscripción creada exitosamente', suscripcion: nuevaSuscripcion };
@@ -47,7 +47,7 @@ exports.encontrarSuscripciones = async (idUsuario) => {
 
   try {
 
-    const suscripciones = await suscripcionModel.find({estudianteId:idUsuario}).populate('cursos').sort({ createdAt: -1 });
+    const suscripciones = await suscripcionModel.find({aprendizId:idUsuario}).populate('cursos').sort({ createdAt: -1 });
 
     if(!suscripciones || suscripciones.length===0){
       return{mensaje: "Sin suscripciones"}
