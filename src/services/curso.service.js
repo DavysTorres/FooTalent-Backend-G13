@@ -17,19 +17,22 @@ exports.crearCurso = async (datoCurso) => {
 exports.mostrarCursos = async() =>{
 
   try {
-    const cursos = await cursoModel.find().populate('profesorId').populate('estudiantes').sort({ createdAt: -1 });
+    const cursos = await cursoModel.find().populate('docenteId').populate('aprendiz');
     return { status: 200, mensaje: "Mostrar cursos exitoso", data: cursos };
   } catch (error) {
     return {status:500, mensaje: error.message};
   }
 }
-exports.mostrarCursoPorId = async (cursoId) => {
+
+exports.mostrarCursoPorId = async (id) => {
   try {
-    const curso = await cursoModel.findById(cursoId).populate('profesorId').populate('estudiantes');
+    const curso = await cursoModel.findById(id).populate('docenteId').populate('aprendiz');
+
     if (!curso) {
-      return { status: 404, mensaje: "Curso no encontrado" };
+      return { status: 404, mensaje: 'Curso no encontrado' };
     }
-    return { status: 200, mensaje: "Mostrar curso exitoso", data: curso };
+
+    return { status: 200, mensaje: 'Curso encontrado', data: curso };
   } catch (error) {
     return { status: 500, mensaje: error.message };
   }

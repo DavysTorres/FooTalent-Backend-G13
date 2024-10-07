@@ -60,10 +60,49 @@ exports.registrarUsuario = async (datoUsuario) => {
 
 exports.loginUsuario = async ({ email, password }) => {
   try {
+<<<<<<< HEAD
     // Buscar al usuario por email
     const usuario = await usuarioModel.findOne({ email });
     if (!usuario) {
       return { status: 400, mensaje: 'Email o contraseña incorrectos' };
+=======
+      // Buscar al usuario por email
+      const usuario = await usuarioModel.findOne({ email });
+      if (!usuario) {
+          return { status: 400, mensaje: 'Email o contraseña incorrectos' };
+      }
+
+        // Verificar la contraseña
+        const passwordCorrecto = await bcrypt.compare(password, usuario.password);
+        if (!passwordCorrecto) {
+            return { status: 400, mensaje: 'Email o contraseña incorrectos' };
+        }
+
+        // Verificar si la cuenta ha sido verificada
+        if (!usuario.verificado) {
+          return { status: 400, mensaje: 'Cuenta no verificada. Por favor, revisa tu correo.' };
+      }
+
+        // Crear y firmar un token JWT
+        const token = jwt.sign({ usuarioId: usuario._id, role: usuario.role }, JWTSecret, { expiresIn: '1h' });
+
+        return { 
+            status: 200, 
+            mensaje: 'Login exitoso', 
+            data: { 
+                token, 
+                usuario: { 
+                    id: usuario._id, 
+                    nombre: usuario.nombre, 
+                    email: usuario.email, 
+                    role: usuario.role 
+                } 
+            } 
+        };
+    } catch (error) {
+        console.log('Error en el login:', error);
+        return { status: 500, mensaje: 'Hubo un problema al iniciar sesión' };
+>>>>>>> main
     }
 
     // Verificar la contraseña
