@@ -6,7 +6,7 @@ const cargarArchivo = require('../services/cargarArchivo.service');
 exports.crearCurso = async (datoCurso) => {
     const {docenteId} =datoCurso;
     try {
-      const docente = await usuarioModel.find({docenteId:docenteId})
+      const docente = await usuarioModel.findById(docenteId)
       if(!docente || docente.length===0){
         return { status: 404, mensaje: 'Docente no encontrado' };
       }
