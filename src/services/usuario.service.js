@@ -73,10 +73,10 @@ exports.loginUsuario = async ({ email, password }) => {
         }
 
         // Verificar si la cuenta ha sido verificada
-        if (!usuario.verificado) {
+     /*   if (!usuario.verificado) {
           return { status: 400, mensaje: 'Cuenta no verificada. Por favor, revisa tu correo.' };
       }
-
+*/
         // Crear y firmar un token JWT
         const token = jwt.sign({ usuarioId: usuario._id, role: usuario.role }, JWTSecret, { expiresIn: '1h' });
 
