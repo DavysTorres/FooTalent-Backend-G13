@@ -15,14 +15,14 @@ const CursoSchema = new Schema({
         type:String
     },
     docenteId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'docente',
+        type: Schema.Types.ObjectId,
+        ref: 'usuario',
         required: true
     },
     //videos: [VideoSchema],
-    estudiantes: [{
+    aprendiz: [{
         type: Schema.Types.ObjectId,
-        ref: 'aprendiz'
+        ref: 'usuario'
     }],
     activo: {
         type: Boolean,

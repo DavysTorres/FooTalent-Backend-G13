@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 
 const suscripcionSchema = mongoose.Schema({
-    estudianteId: {
+    aprendizId: {
         type: mongoose.Types.ObjectId,
         required: true,
         ref: "usuario"
