@@ -1,4 +1,5 @@
 const cursoModel = require('../models/curso.model');
+const usuarioModel = require('../models/usuario.model');
 
 
 exports.crearCurso = async (datoCurso) => {

@@ -14,6 +14,13 @@ exports.loginUsuario = async (req, res) => {
         return res.json(login);
 };
 
+
+exports.mostrarUsuarios = async (req, res) => {
+        const usuario = await usuarioService.mostrarUsuarios();
+        return res.json(usuario);
+    };
+    
+
 // Obtener perfil de usuario (requiere autenticación)
 exports.consultarUsuario = async (req, res) => {
 
@@ -23,16 +30,16 @@ exports.consultarUsuario = async (req, res) => {
 
 exports.resetPasswordRequestController1 = async (req, res) => {
         const requestPasswordResetService = await usuarioService.requestPasswordReset(
-          req.body.email
+                req.body.email
         );
         return res.json(requestPasswordResetService);
 };
 
 exports.resetPasswordController1 = async (req, res) => {
         const resetPasswordService = await usuarioService.resetPassword(
-          req.body.userId,
-          req.body.token,
-          req.body.password
+                req.body.userId,
+                req.body.token,
+                req.body.password
         );
         return res.json(resetPasswordService);
 };
@@ -41,4 +48,10 @@ exports.verificarCuenta = async (req, res) => {
         const { token } = req.query;
         const resultado = await usuarioService.verificarCuenta(token);
         res.status(resultado.status).send(resultado.mensaje);
-    };
+};
+
+
+exports.eliminarUsuario = async (req, res) => {
+        const usuario = await usuarioService.eliminarUsuario(req.params.id);
+        return res.json(usuario);
+}

@@ -3,24 +3,31 @@
 const mongoose = require('mongoose');
 
 const suscripcionSchema = mongoose.Schema({
-    estudiante: {
+    estudianteId: {
         type: mongoose.Types.ObjectId,
         required: true,
-        ref: "user"
+        ref: "usuario"
     },
-    cursos : {
-        type: mongoose.Types.Array.ObjectId,
+    cursos: {
+        type: mongoose.Types.ObjectId,
         required: true,
         ref: "curso"
     },
-    createdAt: {
-        type: Date,
-        default: Date.now
+    progreso: {
+        type: Number,
+        default: 0
     },
-    updatetAt: {
+    estado: {
+        type: String,
+        enum: ['iniciado', 'en curso', 'suspendido', 'finalizado'],
+        default: 'iniciado'
+    },
+    fechaFinalizacion: {
         type: Date,
-        default: Date.now
+        required:false
     }
+
+
 });
 
-module.exports = mongoose.model('Suscripción', suscripcionSchema);
+module.exports = mongoose.model('suscripcion', suscripcionSchema);

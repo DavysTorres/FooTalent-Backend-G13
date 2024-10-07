@@ -15,6 +15,17 @@ exports.obtenerCursoPorId = async (req, res) => {
     return res.json(curso);
 };
 
+exports.mostrarCursoPorId = async (req, res) => {
+    const curso = await cursoService.mostrarCursoPorId(req.params.id);
+    return res.json(curso);
+};
+
+exports.mostrarCursosPorUsuario = async (req, res) => {
+    const curso = await cursoService.mostrarCursosPorUsuario(req.params.id);
+    return res.json(curso);
+};
+
+
 exports.editarCurso = async (req, res) => {
     const curso = await cursoService.editarCurso(req.params.id, req.body);
     return res.json(curso);

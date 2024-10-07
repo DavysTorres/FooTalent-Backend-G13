@@ -27,7 +27,7 @@ exports.registrarUsuario = async (datoUsuario) => {
         const passwordEncriptado = await bcrypt.hash(password, 10);
 
         // Creación de usuario
-        const usuario = new usuarioModel({ nombre, email, password: passwordEncriptado, role });
+        const usuario = new usuarioModel({nombre, email, password: passwordEncriptado, role });
 
         // Guardar el usuario en la base de datos
         const token = jwt.sign({ email }, JWTSecret, { expiresIn: '1h' });
@@ -94,6 +94,24 @@ exports.loginUsuario = async ({ email, password }) => {
         return { status: 500, mensaje: 'Hubo un problema al iniciar sesión' };
     }
 };
+
+
+
+
+exports.mostrarUsuarios = async () => {
+  try {
+    const usuarios = await usuarioModel.find().sort({ createdAt: -1 });
+    if(!usuarios){
+      return{mensaje: "Usuarios no encontrados"}
+    }
+    return { status: 200, mensaje: "Mostrar usuarios exitoso", data: usuarios };
+  } catch (error) {
+    return { status: 500, mensaje: error.message };
+  }
+};
+
+
+
 
 
 exports.consultarUsuario = async ({ usuarioId }) => {
@@ -189,4 +207,16 @@ exports.verificarCuenta = async (token) => {
         return { status: 400, mensaje: 'Token inválido o expirado' };
     }
 };
+
+
+
+
+exports.eliminarUsuario= async(id) =>{
+  const usuarioEliminado = await usuarioModel.findByIdAndUpdate(id, { eliminado: true }, { new: true });{
+    if (!usuarioEliminado) {
+      return { status: 404, mensaje: "usuario no encontrado" };
+    }
+    return { status: 200, mensaje: "Eliminicación del usuario exitosa", data: usuarioEliminado };
+  }
+}
    

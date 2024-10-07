@@ -28,6 +28,10 @@ const UsuarioSchema = mongoose.Schema({
     verificado: {
         type: Boolean,
         default: false
+    },
+    eliminado: {
+        type: Boolean,
+        default: false
     }
 
 
