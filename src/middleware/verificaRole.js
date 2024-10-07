@@ -1,6 +1,6 @@
 //Verificación de Roles Para restringir el acceso a ciertas rutas
 
-const verifyRole = (roles) => {
+const verificaRole = (roles) => {
     return (req, res, next) => {
       const usuarioRole = req.usuario.role;
       if (!roles.includes(usuarioRole)) {
@@ -10,4 +10,4 @@ const verifyRole = (roles) => {
     };
   };
   
-  module.exports = verifyRole;
+  module.exports = verificaRole;

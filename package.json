@@ -1,7 +1,7 @@
 {
   "name": "dev-backproyect-footalent",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js"

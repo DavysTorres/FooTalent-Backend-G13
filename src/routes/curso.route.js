@@ -4,9 +4,10 @@ const router = express.Router();
 const cursoController = require('../controllers/curso.controller')
 
 
-router.post('/', cursoController.crearCurso);
-router.get('/', cursoController.mostrarCurso);
-router.put('/:id', cursoController.editarCurso);
-router.delete('/:id', cursoController.eliminarCurso);
+router.post('/crearCurso', cursoController.crearCurso);
+router.get('/listarCursos', cursoController.mostrarCurso);
+router.get('/obtenerCurso/:id', cursoController.obtenerCursoPorId);
+router.put('/editarCurso/:id', cursoController.editarCurso);
+router.delete('/eliminarCurso/:id', cursoController.eliminarCurso);
 
 module.exports = router;
