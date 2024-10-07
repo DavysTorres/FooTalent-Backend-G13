@@ -4,7 +4,12 @@ const cargarArchivo = require('../services/cargarArchivo.service');
 
 
 exports.crearCurso = async (datoCurso) => {
+    const {docenteId} =datoCurso;
     try {
+      const docente = await usuarioModel.find({docenteId:docenteId})
+      if(!docente || docente.length===0){
+        return { status: 404, mensaje: 'Docente no encontrado' };
+      }
       const cursoCreado = new cursoModel(datoCurso);
       cursoCreado.save();
 
