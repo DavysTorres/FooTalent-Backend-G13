@@ -23,7 +23,7 @@ exports.mostrarCursos = async() =>{
   }
 }
 
-exports.obtenerCursoPorId = async (id) => {
+exports.mostrarCursoPorId = async (id) => {
   try {
     const curso = await cursoModel.findById(id).populate('docenteId').populate('aprendiz');
 

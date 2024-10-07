@@ -10,11 +10,6 @@ exports.mostrarCurso = async (req, res) => {
     return res.json(curso);
 };
 
-exports.obtenerCursoPorId = async (req, res) => {
-    const curso = await cursoService.obtenerCursoPorId(req.params.id, req.body);
-    return res.json(curso);
-};
-
 exports.mostrarCursoPorId = async (req, res) => {
     const curso = await cursoService.mostrarCursoPorId(req.params.id);
     return res.json(curso);
