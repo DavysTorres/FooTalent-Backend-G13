@@ -26,8 +26,10 @@ const ClaseSchema = new Schema({
     eliminado:{
         type:Boolean,
         default:false
-    }
-
+    },
+    documentos:[{
+        type:String
+    }]
 
 
 }, {

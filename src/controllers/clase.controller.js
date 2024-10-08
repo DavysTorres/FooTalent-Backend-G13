@@ -7,13 +7,14 @@ exports.crearClase = async (req, res) => {
 
 exports.eliminarClase = async(req, res) =>{
     const clase = await claseService.eliminarClase(req.params.id);
-    console.log("ID:"+req.params.id)
     return res.json(clase);
 }
 
 exports.editarClase = async (req, res) => {
-    //const imagen = req.file ? req.file.path : null;
-    const clase = await claseService.editarClase(req.params.id, req.body);
+    //const documentos = req.file ? req.file.path : null;
+    console.log("Estoy entrando aqui")
+    const documentos = req.files ? req.files.map(file => file.path) : [];
+    const clase = await claseService.editarClase(req.params.id, req.body, documentos);
     return res.json(clase);
 };
 exports.mostrarClasePorId = async (req, res) => {

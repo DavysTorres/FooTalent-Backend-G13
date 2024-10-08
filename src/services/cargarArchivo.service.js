@@ -6,7 +6,17 @@ const fs = require('fs');
 //logica para la subida de arhivo
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadPath = path.join(__dirname, '..', 'uploads');
+    const uploadPath = path.join(__dirname, '..', 'uploads/imagenes');
+    cb(null, uploadPath);
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  }
+});
+
+const storageDocumento = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadPath = path.join(__dirname, '..', 'uploads/documentos');
     cb(null, uploadPath);
   },
   filename: (req, file, cb) => {
@@ -23,36 +33,53 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-exports.cargarImagen=multer({
-    storage:storage,
-    fileFilter
-  });
+exports.cargarImagen = multer({
+  storage: storage,
+  fileFilter
+});
 
-  
+exports.cargarDocumentos=multer({
+  storage: storageDocumento,
+})
+
+
 exports.resizeImage = async (req, res, next) => {
-    if (!req.file) {
-      next();
-      return;
-    }
-  
-    try {
-      const photo = await jimp.read(req.file.path);
-      await photo.resize(1024, jimp.AUTO);
-      await photo.writeAsync(`uploads/big/${req.file.filename}`);
-      next();
-    } catch (error) {
-      next(error);
-    }
-  };
-
-
-  exports.borrarAntiguaFoto= async(oldAvatar) =>{
-    const oldAvatarPath = path.resolve(__dirname, oldAvatar);
-      fs.unlink(oldAvatarPath, (err) => {
-        if (err) {
-          console.error('Error al borrar la imagen antigua:', err);
-        } else {
-          console.log('Imagen antigua borrada');
-        }
-      });
+  if (!req.file) {
+    next();
+    return;
   }
+
+  try {
+    const photo = await jimp.read(req.file.path);
+    await photo.resize(1024, jimp.AUTO);
+    await photo.writeAsync(`uploads/big/${req.file.filename}`);
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+exports.borrarAntiguaFoto = async (oldAvatar) => {
+  const oldAvatarPath = path.resolve(__dirname, oldAvatar);
+  fs.unlink(oldAvatarPath, (err) => {
+    if (err) {
+      console.error('Error al borrar la imagen antigua:', err);
+    } else {
+      console.log('Imagen antigua borrada');
+    }
+  });
+}
+
+exports.borrarDocumentosAntiguos = async (oldDocuments) => {
+  oldDocuments.forEach((document) => {
+      const documentPath = path.resolve(__dirname, document);
+      fs.unlink(documentPath, (err) => {
+          if (err) {
+              console.error(`Error al borrar el documento ${document}:`, err);
+          } else {
+              console.log(`Documento ${document} borrado`);
+          }
+      });
+  });
+};
