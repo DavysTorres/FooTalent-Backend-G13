@@ -27,7 +27,21 @@ const CursoSchema = new Schema({
     activo: {
         type: Boolean,
         default:true
+    },
+    que_aprenderas:{
+        type:String
+    },
+    requisitos:{
+        type:String
+    },
+    razon_eleccion:{
+        type:String
+    },
+    informacion_adicional:{
+        type:String
     }
+
+
 
 }, {
     versionKey: false,

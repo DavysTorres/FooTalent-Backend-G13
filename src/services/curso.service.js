@@ -22,7 +22,7 @@ exports.crearCurso = async (datoCurso) => {
 exports.mostrarCursos = async() =>{
 
   try {
-    const cursos = await cursoModel.find().populate('docenteId').populate('aprendiz');
+    const cursos = await cursoModel.find().sort({ createdAt: -1 });
     return { status: 200, mensaje: "Mostrar cursos exitoso", data: cursos };
   } catch (error) {
     return {status:500, mensaje: error.message};
