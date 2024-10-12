@@ -11,6 +11,7 @@ const cargarArchivo = require('../services/cargarArchivo.service');
 const JWTSecret = process.env.JWT_SECRET;
 const bcryptSalt = process.env.BCRYPT_SALT;
 const clientURL = process.env.CLIENT_URL;
+const clientURLFront=process.env.CLIENT_URL_FRONTEND;
 
 
 exports.registrarUsuario = async (datoUsuario) => {
@@ -36,7 +37,7 @@ exports.registrarUsuario = async (datoUsuario) => {
     // Guardar el usuario en la base de datos
     const token = jwt.sign({ email }, JWTSecret, { expiresIn: '1h' });
 
-    const link = `${clientURL}/api/usuario/verificarCuenta?token=${token}`;
+    const link = `${clientURLFront}/verifyAccount?token=${token}`;
 
 
     sendEmail(
@@ -155,7 +156,7 @@ exports.requestPasswordReset = async (email) => {
     createdAt: Date.now(),
   }).save();
 
-  const link = `${clientURL}/passwordReset?token=${resetToken}&id=${user._id}`;
+  const link = `${clientURLFront}/reset?token=${resetToken}&id=${user._id}`;
   sendEmail(
     user.email,
     "Password Reset Request",

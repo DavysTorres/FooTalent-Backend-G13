@@ -4,7 +4,7 @@ const usuarioService = require('../services/usuario.service');
 exports.registroUsuario = async (req, res) => {
 
         const registro = await usuarioService.registrarUsuario(req.body);
-        return res.json(registro);
+        return res.status(registro.status).json(registro);
 };
 
 // Inicio de sesión
