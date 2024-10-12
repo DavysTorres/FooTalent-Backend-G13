@@ -24,7 +24,7 @@ exports.registrarUsuario = async (datoUsuario) => {
     // Validación si el usuario existe
     const existeUsuario = await usuarioModel.findOne({ email });
     if (existeUsuario) {
-      return { status: 400, mensaje: 'Usuario ya existe' };
+      return { status: 409, mensaje: 'Usuario ya existe' };
     }
 
     // Encriptar contraseña
@@ -108,7 +108,7 @@ exports.mostrarUsuarios = async () => {
   try {
     const usuarios = await usuarioModel.find().sort({ createdAt: -1 });
     if (!usuarios) {
-      return { mensaje: "Usuarios no encontrados" }
+      return { mensaje: "Usuarios no encontrados", status:400 }
     }
     return { status: 200, mensaje: "Mostrar usuarios exitoso", data: usuarios };
   } catch (error) {
@@ -124,7 +124,7 @@ exports.consultarUsuario = async ({ usuarioId }) => {
   try {
     // Asegúrate de que usuarioId esté correctamente definido
     if (!usuarioId) {
-      return { status: 400, mensaje: 'Usuario no autenticado' };
+      return { status: 404, mensaje: 'Usuario no autenticado' };
     }
 
     const usuario = await usuarioModel.findById(usuarioId);
@@ -141,7 +141,7 @@ exports.consultarUsuario = async ({ usuarioId }) => {
 
 exports.requestPasswordReset = async (email) => {
   const user = await usuarioModel.findOne({ email });
-  if (!user) throw new Error("Email does not exist");
+  if (!user) throw new Error("Email no existe");
 
   let token = await Token.findOne({ userId: user._id });
   if (token) await token.deleteOne();
@@ -204,13 +204,13 @@ exports.verificarCuenta = async (token) => {
     const { email } = jwt.verify(token, JWTSecret);
     const usuario = await usuarioModel.findOne({ email });
     if (!usuario) {
-      return { status: 400, mensaje: 'Usuario no encontrado' };
+      return { status: 404, mensaje: 'Usuario no encontrado' };
     }
     usuario.verificado = true;
     await usuario.save();
     return { status: 200, mensaje: 'Cuenta verificada correctamente' };
   } catch (error) {
-    return { status: 400, mensaje: 'Token inválido o expirado' };
+    return { status: 403, mensaje: 'Token inválido o expirado' };
   }
 };
 

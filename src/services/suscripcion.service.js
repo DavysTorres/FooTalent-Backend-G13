@@ -8,13 +8,13 @@ exports.generarSuscripcion = async (usuarioId, cursoId) => {
         // Verificar si el usuario existe
         const usuario = await usuarioModel.findById(usuarioId);
         if (!usuario) {
-          return { mensaje: 'Usuario no encontrado' };
+          return { mensaje: 'Usuario no encontrado', status:404 };
         }
     
         // Verificar si el curso existe
         const curso = await cursoModel.findById(cursoId);
         if (!curso) {
-          return { mensaje: 'Curso no encontrado' };
+          return { mensaje: 'Curso no encontrado', status:404 };
         }
     
         // Verificar si el usuario ya está suscrito al curso
@@ -36,9 +36,9 @@ exports.generarSuscripcion = async (usuarioId, cursoId) => {
         curso.aprendiz.push(usuarioId);
         await curso.save();
     
-        return { mensaje: 'Suscripción creada exitosamente', suscripcion: nuevaSuscripcion };
+        return { mensaje: 'Suscripción creada exitosamente', suscripcion: nuevaSuscripcion, status:201 };
       } catch (error) {
-        return { mensaje: 'Error al crear la suscripción', error: error.message };
+        return { mensaje: 'Error al crear la suscripción', error: error.message, status:400 };
       }
 }
 
@@ -50,7 +50,7 @@ exports.encontrarSuscripciones = async (idUsuario) => {
     const suscripciones = await suscripcionModel.find({aprendizId:idUsuario}).populate('cursos').sort({ createdAt: -1 });
 
     if(!suscripciones || suscripciones.length===0){
-      return{mensaje: "Sin suscripciones"}
+      return{mensaje: "Suscripcion no encontrada", status: 404}
     }
     return { status: 200, mensaje: "Mostrar suscripciones exitoso", data: suscripciones };
   } catch (error) {
