@@ -11,28 +11,28 @@ exports.registroUsuario = async (req, res) => {
 exports.loginUsuario = async (req, res) => {
 
         const login = await usuarioService.loginUsuario(req.body);
-        return res.json(login);
+        return res.status(login.status).json(login);
 };
 
 
 exports.mostrarUsuarios = async (req, res) => {
         const usuario = await usuarioService.mostrarUsuarios();
-        return res.json(usuario);
+        return res.status(usuario.status).json(usuario);
     };
     
 
 // Obtener perfil de usuario (requiere autenticación)
 exports.consultarUsuario = async (req, res) => {
 
-        const consultar = await usuarioService.consultarUsuario(req.usuario);
-        return res.json(consultar);
+        const usuario = await usuarioService.consultarUsuario(req.usuario);
+        return res.status(usuario.status).json(usuario)
 };
 
 exports.resetPasswordRequestController1 = async (req, res) => {
         const requestPasswordResetService = await usuarioService.requestPasswordReset(
                 req.body.email
         );
-        return res.json(requestPasswordResetService);
+        return res.status(requestPasswordResetService.status).json(requestPasswordResetService)
 };
 
 exports.resetPasswordController1 = async (req, res) => {
@@ -41,7 +41,7 @@ exports.resetPasswordController1 = async (req, res) => {
                 req.body.token,
                 req.body.password
         );
-        return res.json(resetPasswordService);
+        return res.status(resetPasswordService.status).json(resetPasswordService)
 };
 
 exports.verificarCuenta = async (req, res) => {
@@ -53,11 +53,11 @@ exports.verificarCuenta = async (req, res) => {
 
 exports.eliminarUsuario = async (req, res) => {
         const usuario = await usuarioService.eliminarUsuario(req.params.id);
-        return res.json(usuario);
+        return res.status(usuario.status).json(usuario);
 }
 
 exports.editarUsuario = async (req, res) => {
         const avatar = req.file ? req.file.path : null;
         const usuario = await usuarioService.editarUsuario(req.params.id, req.body,avatar);
-        return res.json(usuario);
+        return res.status(usuario.status).json(usuario);
 }

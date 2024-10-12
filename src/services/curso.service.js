@@ -4,28 +4,28 @@ const cargarArchivo = require('../services/cargarArchivo.service');
 
 
 exports.crearCurso = async (datoCurso) => {
-    const {docenteId} =datoCurso;
-    try {
-      const docente = await usuarioModel.findById(docenteId)
-      if(!docente || docente.length===0){
-        return { status: 404, mensaje: 'Docente no encontrado' };
-      }
-      const cursoCreado = new cursoModel(datoCurso);
-      cursoCreado.save();
+  const { docenteId } = datoCurso;
+  try {
+    const docente = await usuarioModel.findById(docenteId)
+    if (!docente || docente.length === 0) {
+      return { status: 404, mensaje: 'Docente no encontrado' };
+    }
+    const cursoCreado = new cursoModel(datoCurso);
+    cursoCreado.save();
 
-        return { status: 201, mensaje: "Creación de curso exitoso", data: cursoCreado  };
-      } catch (error) {
-        return { status: 500, mensaje: error.message };
-      }
+    return { status: 201, mensaje: "Creación de curso exitoso", data: cursoCreado };
+  } catch (error) {
+    return { status: 500, mensaje: error.message };
+  }
 };
 
-exports.mostrarCursos = async() =>{
+exports.mostrarCursos = async () => {
 
   try {
     const cursos = await cursoModel.find().sort({ createdAt: -1 });
     return { status: 200, mensaje: "Mostrar cursos exitoso", data: cursos };
   } catch (error) {
-    return {status:500, mensaje: error.message};
+    return { status: 500, mensaje: error.message };
   }
 }
 
@@ -44,7 +44,7 @@ exports.mostrarCursoPorId = async (id) => {
 };
 
 
-exports.mostrarCursosPorUsuario= async (id)=>{
+exports.mostrarCursosPorUsuario = async (id) => {
 
   try {
     const usuario = await usuarioModel.findById(id); // Obtener el usuario de la base de datos
@@ -57,26 +57,26 @@ exports.mostrarCursosPorUsuario= async (id)=>{
       case 'Aprendiz':
         // Obtener cursos suscritos por el estudiante
         const cursosEstudiante = await cursoModel.find({ estudiantes: id }).populate('profesorId').sort({ createdAt: -1 });
-        if(!cursosEstudiante || cursosEstudiante.length === 0){
-          return {mensaje: "Estudiante sin cursos"}
+        if (!cursosEstudiante || cursosEstudiante.length === 0) {
+          return { mensaje: "Aprendiz sin cursos", status: 404 }
         }
-        return { data: cursosEstudiante };
+        return { data: cursosEstudiante, mensaje:"Cursos mostrados exitosamente", status:200 };
       case 'Docente':
         // Obtener cursos creados por el profesor
         const cursosProfesor = await cursoModel.find({ profesorId: id }).sort({ createdAt: -1 });;
-        if(!cursosProfesor || cursosProfesor.length === 0){
-          return {mensaje: "Profesor sin cursos"}
+        if (!cursosProfesor || cursosProfesor.length === 0) {
+          return { mensaje: "Docente sin cursos", status:404 }
         }
-        return { data: cursosProfesor };
+        return { data: cursosProfesor, mensaje:"Cursos mostrados exitosamente", status:200 };
       default:
-        return { mensaje: 'Usuario no válido' };
+        return { mensaje: 'Usuario no válido', status: 400 };
     }
   } catch (error) {
-    return { mensaje: 'Error al obtener los cursos', error: error.message };
+    return { mensaje: 'Error al obtener los cursos', error: error.message, status:500 };
   }
 }
 
-exports.editarCurso = async(id, datoCurso, imagen) => {
+exports.editarCurso = async (id, datoCurso, imagen) => {
 
   try {
     // Encuentra el curso actual para obtener la ruta de la imagen antiguo
@@ -89,7 +89,7 @@ exports.editarCurso = async(id, datoCurso, imagen) => {
       cargarArchivo.borrarAntiguaFoto(cursoActual.imagen)
     }
 
-    const cursoActualizado = await cursoModel.findByIdAndUpdate(id, {...datoCurso, imagen:imagen}, { new: true });
+    const cursoActualizado = await cursoModel.findByIdAndUpdate(id, { ...datoCurso, imagen: imagen }, { new: true });
 
     if (!cursoActualizado) {
       return { status: 404, mensaje: "Curso no encontrado" };
@@ -99,10 +99,10 @@ exports.editarCurso = async(id, datoCurso, imagen) => {
   } catch (error) {
     return { status: 500, mensaje: error.message };
   }
- 
+
 }
-exports.eliminarCurso= async(id) =>{
-  const cursoEliminado = await cursoModel.findByIdAndUpdate(id, { activo: false }, { new: true });{
+exports.eliminarCurso = async (id) => {
+  const cursoEliminado = await cursoModel.findByIdAndUpdate(id, { activo: false }, { new: true }); {
     if (!cursoEliminado) {
       return { status: 404, mensaje: "Curso no encontrado" };
     }
