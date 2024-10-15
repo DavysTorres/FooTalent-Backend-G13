@@ -1,5 +1,5 @@
 const express = require('express');
-const conectarDB = require('./config/configDB');
+const conectarDB = require('./src/config/configDB');
 const cors = require('cors');
 const app = express();
 
@@ -14,7 +14,7 @@ app.use(express.json());
 
 
 //Routes
-app.use('/api', require('./routes/routes'));
+app.use('/api', require('./src/routes/routes'));
 
 const PORT = process.env.PORT
 app.listen(PORT, ()=>{
