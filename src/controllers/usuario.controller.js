@@ -32,7 +32,7 @@ exports.resetPasswordRequestController1 = async (req, res) => {
         const requestPasswordResetService = await usuarioService.requestPasswordReset(
                 req.body.email
         );
-        return res.status(requestPasswordResetService.status).json(requestPasswordResetService)
+        return res.json(requestPasswordResetService)
 };
 
 exports.resetPasswordController1 = async (req, res) => {

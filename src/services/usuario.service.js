@@ -90,7 +90,8 @@ exports.loginUsuario = async ({ email, password }) => {
                     id: usuario._id, 
                     nombre: usuario.nombre, 
                     email: usuario.email, 
-                    role: usuario.role 
+                    role: usuario.role,
+                    avatar:usuario.avatar 
                 } 
             } 
         };

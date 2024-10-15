@@ -25,7 +25,10 @@ const suscripcionSchema = mongoose.Schema({
     fechaFinalizacion: {
         type: Date,
         required:false
-    }
+    },
+    clasesCompletadas: [{
+        type: mongoose.Types.ObjectId
+    }]
 
 
 });
