@@ -35,7 +35,7 @@ app.use(cors({
 app.use(express.json());
 
 //Routes
-app.use('/', require('./src/routes/routes'));
+app.use('/api', require('./src/routes/routes'));
 
 const PORT = process.env.PORT
 app.listen(PORT, ()=>{
