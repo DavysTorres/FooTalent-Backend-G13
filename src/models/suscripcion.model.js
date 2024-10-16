@@ -27,7 +27,8 @@ const suscripcionSchema = mongoose.Schema({
         required:false
     },
     clasesCompletadas: [{
-        type: mongoose.Types.ObjectId
+        type: mongoose.Types.ObjectId,
+        ref: "clase"
     }]
 
 
