@@ -14,4 +14,9 @@ exports.encontrarSuscripciones = async (req, res, next) => {
     return res.status(suscripcion.status).json(suscripcion);
 }
 
+exports.agregarClaseCompletadas= async (req, res) =>{
+    const suscripcion = await suscripcionService.agregarClaseCompletada(req.params.id, req.params.cursoId);
+    return res.status(suscripcion.status).json(suscripcion);
+}
+
 

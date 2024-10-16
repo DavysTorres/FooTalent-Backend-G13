@@ -13,6 +13,10 @@ exports.crearClase = async (datoClase) => {
     }
     const claseCreado = new claseModel(datoClase);
     claseCreado.save();
+    curso.clases.push(claseCreado._id);
+
+    console.log("Contenido de clase:", curso);
+    await curso.save();
 
     return { status: 201, mensaje: "Creación de clase exitoso", data: claseCreado };
   } catch (error) {

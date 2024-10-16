@@ -47,8 +47,9 @@ exports.mostrarCursoPorId = async (id) => {
 exports.mostrarCursosPorUsuario = async (id) => {
 
   try {
+    console.log("Mostrando ID:",id)
     const usuario = await usuarioModel.findById(id); // Obtener el usuario de la base de datos
-
+    console.log("SOY USUARIO: ", usuario)
     if (!usuario) {
       return { mensaje: 'Usuario no encontrado' };
     }
@@ -56,14 +57,14 @@ exports.mostrarCursosPorUsuario = async (id) => {
     switch (usuario.role) {
       case 'Aprendiz':
         // Obtener cursos suscritos por el estudiante
-        const cursosEstudiante = await cursoModel.find({ estudiantes: id }).populate('profesorId').sort({ createdAt: -1 });
+        const cursosEstudiante = await cursoModel.find({ aprendiz: id }).populate('docenteId').sort({ createdAt: -1 });
         if (!cursosEstudiante || cursosEstudiante.length === 0) {
           return { mensaje: "Aprendiz sin cursos", status: 404 }
         }
         return { data: cursosEstudiante, mensaje:"Cursos mostrados exitosamente", status:200 };
       case 'Docente':
         // Obtener cursos creados por el profesor
-        const cursosProfesor = await cursoModel.find({ profesorId: id }).sort({ createdAt: -1 });;
+        const cursosProfesor = await cursoModel.find({ docenteId: id }).sort({ createdAt: -1 });;
         if (!cursosProfesor || cursosProfesor.length === 0) {
           return { mensaje: "Docente sin cursos", status:404 }
         }
