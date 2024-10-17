@@ -39,7 +39,11 @@ const CursoSchema = new Schema({
     },
     informacion_adicional:{
         type:String
-    }
+    },
+    clases: [{
+        type: Schema.Types.ObjectId,
+        ref: 'clase'
+    }],
 
 
 
