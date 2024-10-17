@@ -122,7 +122,7 @@ exports.mostrarUsuarios = async () => {
 
 
 
-exports.consultarUsuario = async ({ usuarioId }) => {
+exports.consultarUsuario = async (usuarioId) => {
   try {
     // Asegúrate de que usuarioId esté correctamente definido
     if (!usuarioId) {
@@ -135,6 +135,25 @@ exports.consultarUsuario = async ({ usuarioId }) => {
     }
 
     return { status: 200, mensaje: 'Usuario encontrado', data: { id: usuario._id, nombre: usuario.nombre, email: usuario.email, role: usuario.role } };
+  } catch (error) {
+    console.error(error); // Asegúrate de ver el error en los logs
+    return { status: 500, mensaje: 'Hubo un problema al consultar el usuario' };
+  }
+};
+
+exports.consultarUsuarioPorId = async (usuarioId) => {
+  try {
+    // Asegúrate de que usuarioId esté correctamente definido
+    if (!usuarioId) {
+      return { status: 404, mensaje: 'Usuario no autenticado' };
+    }
+
+    const usuario = await usuarioModel.findById(usuarioId);
+    if (!usuario) {
+      return { status: 404, mensaje: 'Usuario no encontrado' };
+    }
+
+    return { status: 200, mensaje: 'Usuario encontrado', data: usuario };
   } catch (error) {
     console.error(error); // Asegúrate de ver el error en los logs
     return { status: 500, mensaje: 'Hubo un problema al consultar el usuario' };

@@ -12,6 +12,8 @@ router.post('/register', usuarioController.registroUsuario);
 router.post('/login', usuarioController.loginUsuario);
 //Devuelve un usuario por el token recibido despues de loguearse (funcion para devolver los datos al modificar perfil)
 router.get('/listar-usuario', verificarToken, usuarioController.consultarUsuario);
+
+router.get('/mostrarUsuarioPorId/:id', usuarioController.consultarUsuarioPorId);
 //Elimina un usuario de forma logica
 router.delete('/eliminar/:id', usuarioController.eliminarUsuario);
 //Edita un usuario

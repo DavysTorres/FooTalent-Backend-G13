@@ -12,7 +12,7 @@ exports.eliminarClase = async(req, res) =>{
 
 exports.editarClase = async (req, res) => {
     //const documentos = req.file ? req.file.path : null;
-    console.log("Estoy entrando aqui")
+    
     const documentos = req.files ? req.files.map(file => file.path) : [];
     const clase = await claseService.editarClase(req.params.id, req.body, documentos);
     return res.status(clase.status).json(clase);

@@ -48,7 +48,7 @@ exports.encontrarSuscripciones = async (idUsuario) => {
 
 
   try {
-    console.log("entre aqui")
+ 
     const suscripciones = await suscripcionModel.find({ aprendizId: idUsuario }).populate('cursos').sort({ createdAt: -1 });
 
     if (!suscripciones || suscripciones.length === 0) {
@@ -68,7 +68,7 @@ exports.agregarClaseCompletada = async (idSuscripcion, idClase) => {
     if (!suscripcion) {
       throw new Error('Suscripción no encontrada');
     }
-    console.log("Suscripcion: ", suscripcion)
+    
 
     // Verificar si la clase ya está completada
     if (suscripcion.clasesCompletadas.includes(idClase)) {
@@ -85,17 +85,14 @@ exports.agregarClaseCompletada = async (idSuscripcion, idClase) => {
     // Obtener el total de clases del curso
     const cursoId = suscripcion.cursos;
 
-
-    //console.log("Estoy ingresando cursoId: ", cursoId)
     const totalClases = await cursoService.mostrarCursoPorId(cursoId);
-    console.log("TOTAL CLASES :", totalClases.data.clases);
-    //console.log("Clases completadas", suscripcion.clasesCompletadas.length);
+ 
 
     // Calcular el progreso
-    const progreso = (suscripcion.clasesCompletadas.length / totalClases.data.clases.length) * 100;
+    const progreso = ((suscripcion.clasesCompletadas.length / totalClases.data.clases.length) * 100).toFixed(2);
 
     // Actualizar el progreso en la suscripción
-    suscripcion.progreso = progreso;
+    suscripcion.progreso = parseFloat(progreso);
 
     // Guardar los cambios
     await suscripcion.save();
@@ -109,33 +106,17 @@ exports.agregarClaseCompletada = async (idSuscripcion, idClase) => {
 }
 
 
-
-
-
-exports.obtenerClases = async (cursoId) => {
-  try {
-    // Lógica para obtener todas las clases de un curso
-    const clases = await claseModel.findOne({ cursoId: cursoId });
-    console.log("Clases: ", clases)
-    return clases; // Devuelve un array con todas las clases
-  } catch (error) {
-    console.error('Error al obtener las clases:', error);
-    throw new Error('No se pudieron obtener las clases');
-  }
-}
-
-
 exports.encontrarSuscripcionesId = async (id) => {
 
 
   try {
     
-    const suscripciones = await suscripcionModel.findOne(id).populate('cursos').sort({ createdAt: -1 });
+    const suscripciones = await suscripcionModel.findById(id).populate('cursos').sort({ createdAt: -1 });
 
     if (!suscripciones || suscripciones.length === 0) {
       return { mensaje: "Suscripcion no encontrada", status: 404 }
     }
-    return { status: 200, mensaje: "Mostrar suscripciones exitoso", data: suscripciones };
+    return { status: 200, mensaje: "Mostrar suscripcion de forma exitosa", data: suscripciones };
   } catch (error) {
     return { status: 500, mensaje: error.message };
   }

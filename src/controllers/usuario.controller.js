@@ -23,8 +23,13 @@ exports.mostrarUsuarios = async (req, res) => {
 
 // Obtener perfil de usuario (requiere autenticación)
 exports.consultarUsuario = async (req, res) => {
-
         const usuario = await usuarioService.consultarUsuario(req.usuario);
+        return res.status(usuario.status).json(usuario)
+};
+
+exports.consultarUsuarioPorId = async (req, res) => {
+        
+        const usuario = await usuarioService.consultarUsuarioPorId(req.params.id);
         return res.status(usuario.status).json(usuario)
 };
 

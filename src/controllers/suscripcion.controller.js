@@ -20,3 +20,10 @@ exports.agregarClaseCompletadas= async (req, res) =>{
 }
 
 
+exports.encontrarSuscripcionesId = async (req, res, next) => {
+ 
+    const suscripcion = await suscripcionService.encontrarSuscripcionesId(req.params.id);
+
+    return res.status(suscripcion.status).json(suscripcion);
+}
+
