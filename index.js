@@ -10,14 +10,14 @@ app.use(helmet({
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "https://vercel.live", "https://your-frontend-domain.vercel.app"],
+        scriptSrc: ["'self'", "https://vercel.live", "https://foo-talent-frontend-g13.vercel.app/"],
         objectSrc: ["'none'"],
       },
     },
   }));
 
 
-const origenesPermitidos = ['http://localhost:4200', 'https://foo-talent-backend-g13.vercel.app/'];
+const origenesPermitidos = ['http://localhost:4200', 'https://foo-talent-frontend-g13.vercel.app/'];
 
 //Middlewares
 app.use(cors({
