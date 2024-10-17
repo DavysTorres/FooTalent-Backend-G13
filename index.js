@@ -6,7 +6,7 @@ const helmet = require('helmet');
 
 conectarDB();
 
-app.use(helmet({
+/*app.use(helmet({
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
@@ -14,13 +14,17 @@ app.use(helmet({
         objectSrc: ["'none'"],
       },
     },
-  }));
+  }));*/
+
+  app.use(helmet({
+    contentSecurityPolicy: false // Desactivar temporalmente para pruebas
+}));
 
 
 const origenesPermitidos = ['http://localhost:4200', 'https://foo-talent-frontend-g13.vercel.app/'];
 
 //Middlewares
-app.use(cors({
+/*app.use(cors({
     origin: function (origin, callback) {
         if (!origin) return callback(null, true);
         if (origenesPermitidos.indexOf(origin) === -1) {
@@ -30,7 +34,13 @@ app.use(cors({
         return callback(null, true);
     },
     credentials: true
+}));*/
+
+app.use(cors({
+  origin: '*',
+  credentials: true
 }));
+
 
 app.use(express.json());
 
