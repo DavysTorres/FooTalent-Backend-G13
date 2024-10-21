@@ -11,7 +11,7 @@ const cargarArchivo = require('../services/cargarArchivo.service');
 const JWTSecret = process.env.JWT_SECRET;
 const bcryptSalt = process.env.BCRYPT_SALT;
 const clientURL = process.env.CLIENT_URL;
-const clientURLFront=process.env.CLIENT_URL_FRONTEND;
+const clientURLFront=process.env.CLIENT_URL_FRONTEND_PRODUCCION;
 
 
 exports.registrarUsuario = async (datoUsuario) => {
@@ -38,6 +38,8 @@ exports.registrarUsuario = async (datoUsuario) => {
     const token = jwt.sign({ email }, JWTSecret, { expiresIn: '1h' });
 
     const link = `${clientURLFront}/verifyAccount?token=${token}`;
+
+    console.log("Link:", link)
 
 
     sendEmail(
