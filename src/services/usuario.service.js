@@ -39,8 +39,6 @@ exports.registrarUsuario = async (datoUsuario) => {
 
     const link = `${clientURLFront}/verifyAccount?token=${token}`;
 
-    console.log("Link:", link)
-
 
     sendEmail(
       usuario.email,
@@ -149,12 +147,10 @@ exports.consultarUsuarioPorId = async (usuarioId) => {
     if (!usuarioId) {
       return { status: 404, mensaje: 'Usuario no autenticado' };
     }
-
-    const usuario = await usuarioModel.findById(usuarioId);
+    const usuario = await usuarioModel.findById(usuarioId, 'nombre email role avatar descripcion');
     if (!usuario) {
       return { status: 404, mensaje: 'Usuario no encontrado' };
     }
-
     return { status: 200, mensaje: 'Usuario encontrado', data: usuario };
   } catch (error) {
     console.error(error); // Asegúrate de ver el error en los logs

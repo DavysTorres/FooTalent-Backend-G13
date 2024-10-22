@@ -1,9 +1,13 @@
 //cSpell: disable
+const { RegistrarUsuarioDTO, EditarUsuarioDTO, MostrarUsuarioPorIdDTO } = require('../dto/usuario.dto');
 const usuarioService = require('../services/usuario.service');
 
 exports.registroUsuario = async (req, res) => {
-
-        const registro = await usuarioService.registrarUsuario(req.body);
+        const { error, value: datosValidados } = RegistrarUsuarioDTO.validate(req.body);
+        if (error) {
+                return res.status(400).json({ error: error.details });
+        }
+        const registro = await usuarioService.registrarUsuario(datosValidados);
         return res.status(registro.status).json(registro);
 };
 
@@ -18,8 +22,8 @@ exports.loginUsuario = async (req, res) => {
 exports.mostrarUsuarios = async (req, res) => {
         const usuario = await usuarioService.mostrarUsuarios();
         return res.status(usuario.status).json(usuario);
-    };
-    
+};
+
 
 // Obtener perfil de usuario (requiere autenticación)
 exports.consultarUsuario = async (req, res) => {
@@ -28,9 +32,20 @@ exports.consultarUsuario = async (req, res) => {
 };
 
 exports.consultarUsuarioPorId = async (req, res) => {
-        
+
         const usuario = await usuarioService.consultarUsuarioPorId(req.params.id);
-        return res.status(usuario.status).json(usuario)
+        if (!usuario) {
+                return res.status(404).json({ error: 'Usuario no encontrado' });
+        }
+        const usuarioPlano = usuario.data.toObject()
+
+        const datosValidados = MostrarUsuarioPorIdDTO.validate(usuarioPlano);
+        
+        console.log(datosValidados);
+        if (datosValidados.error) {
+                return res.status(500).json({ error: datosValidados.error.details });
+        }
+        res.status(200).json(datosValidados.value);
 };
 
 exports.resetPasswordRequestController1 = async (req, res) => {
@@ -63,6 +78,10 @@ exports.eliminarUsuario = async (req, res) => {
 
 exports.editarUsuario = async (req, res) => {
         const avatar = req.file ? req.file.path : null;
-        const usuario = await usuarioService.editarUsuario(req.params.id, req.body,avatar);
+        const { error, value: datosValidados } = EditarUsuarioDTO.validate(req.body);
+        if (error) {
+                return res.status(400).json({ error: error.details });
+        }
+        const usuario = await usuarioService.editarUsuario(req.params.id, datosValidados, avatar);
         return res.status(usuario.status).json(usuario);
 }

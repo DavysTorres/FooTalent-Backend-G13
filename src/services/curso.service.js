@@ -47,7 +47,6 @@ exports.mostrarCursoPorId = async (id) => {
 exports.mostrarCursosPorUsuario = async (id) => {
 
   try {
-    console.log("Mostrando ID:",id)
     const usuario = await usuarioModel.findById(id); // Obtener el usuario de la base de datos
     console.log("SOY USUARIO: ", usuario)
     if (!usuario) {
