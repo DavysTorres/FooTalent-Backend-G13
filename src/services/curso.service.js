@@ -22,16 +22,28 @@ exports.crearCurso = async (datoCurso) => {
 exports.mostrarCursos = async () => {
 
   try {
-    const cursos = await cursoModel.find().sort({ createdAt: -1 });
+    const cursos = await cursoModel.find({ docenteId: { $type: 'objectId' } })  // Filtra solo si es un ObjectId válido
+      .populate({
+        path: 'docenteId',
+        select: '_id nombre',
+      })
+      .sort({ createdAt: -1 });
+
     return { status: 200, mensaje: "Mostrar cursos exitoso", data: cursos };
   } catch (error) {
     return { status: 500, mensaje: error.message };
   }
-}
+};
+
 
 exports.mostrarCursoPorId = async (id) => {
   try {
-    const curso = await cursoModel.findById(id).populate('docenteId').populate('aprendiz');
+    const curso = await cursoModel.findById(id).populate(
+      {
+        path: 'docenteId',
+        select: '_id nombre descripcion'
+      }
+    );
 
     if (!curso) {
       return { status: 404, mensaje: 'Curso no encontrado' };
@@ -48,31 +60,22 @@ exports.mostrarCursosPorUsuario = async (id) => {
 
   try {
     const usuario = await usuarioModel.findById(id); // Obtener el usuario de la base de datos
-    console.log("SOY USUARIO: ", usuario)
     if (!usuario) {
       return { mensaje: 'Usuario no encontrado' };
     }
-
-    switch (usuario.role) {
-      case 'Aprendiz':
-        // Obtener cursos suscritos por el estudiante
-        const cursosEstudiante = await cursoModel.find({ aprendiz: id }).populate('docenteId').sort({ createdAt: -1 });
-        if (!cursosEstudiante || cursosEstudiante.length === 0) {
-          return { mensaje: "Aprendiz sin cursos", status: 404 }
-        }
-        return { data: cursosEstudiante, mensaje:"Cursos mostrados exitosamente", status:200 };
-      case 'Docente':
-        // Obtener cursos creados por el profesor
-        const cursosProfesor = await cursoModel.find({ docenteId: id }).sort({ createdAt: -1 });;
-        if (!cursosProfesor || cursosProfesor.length === 0) {
-          return { mensaje: "Docente sin cursos", status:404 }
-        }
-        return { data: cursosProfesor, mensaje:"Cursos mostrados exitosamente", status:200 };
-      default:
-        return { mensaje: 'Usuario no válido', status: 400 };
+    const cursosProfesor = await cursoModel.find({ docenteId: { $type: 'objectId' } })
+      .populate({
+        path: 'docenteId',
+        select: '_id nombre',
+      })
+      .sort({ createdAt: -1 });;
+    if (!cursosProfesor || cursosProfesor.length === 0) {
+      return { mensaje: "Docente sin cursos", status: 404 }
     }
+    return { data: cursosProfesor, mensaje: "Cursos mostrados exitosamente", status: 200 };
+
   } catch (error) {
-    return { mensaje: 'Error al obtener los cursos', error: error.message, status:500 };
+    return { mensaje: 'Error al obtener los cursos', error: error.message, status: 500 };
   }
 }
 
