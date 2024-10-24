@@ -1,3 +1,4 @@
+const path = require('path');
 const cursoModel = require('../models/curso.model');
 const usuarioModel = require('../models/usuario.model');
 const cargarArchivo = require('../services/cargarArchivo.service');
@@ -89,10 +90,13 @@ exports.editarCurso = async (id, datoCurso, imagen) => {
     }
     // Si hay un nuevo avatar y un avatar antiguo, borra el antiguo
     if (imagen && cursoActual.imagen) {
-      cargarArchivo.borrarAntiguaFoto(cursoActual.imagen)
+      // Construye la ruta completa utilizando path.join para borrar el archivo
+      const oldImagePath = path.join(__dirname, '..', cursoActual.imagen); 
+      cargarArchivo.borrarAntiguaFoto(oldImagePath);
     }
 
-    const cursoActualizado = await cursoModel.findByIdAndUpdate(id, { ...datoCurso, imagen: imagen }, { new: true });
+    const relativeImagenPath = imagen ? `uploads/imagenes/${imagen}` : cursoActual.imagen;
+    const cursoActualizado = await cursoModel.findByIdAndUpdate(id, { ...datoCurso, imagen: relativeImagenPath }, { new: true });
 
     if (!cursoActualizado) {
       return { status: 404, mensaje: "Curso no encontrado" };

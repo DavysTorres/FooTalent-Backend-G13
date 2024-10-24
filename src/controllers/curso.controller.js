@@ -109,14 +109,14 @@ exports.mostrarCursosPorUsuario = async (req, res) => {
 exports.editarCurso = async (req, res) => {
     try {
         // Si hay una imagen en el request, añadirla al body
-        const imagen = req.file ? req.file.path : null;
+        const imagen = req.file ? req.file.filename : null;
         if (imagen) {
             req.body.imagen = imagen;
         }
-
+        
         // Validar los datos usando el DTO
         const { error, value } = EditarCursoDTO.validate(req.body, { abortEarly: false });
-        
+    
         if (error) {
             // Si hay errores de validación, devolver un error
             return res.status(400).json({
@@ -127,7 +127,7 @@ exports.editarCurso = async (req, res) => {
         }
 
         // Llamar al servicio con los datos validados
-        const curso = await cursoService.editarCurso(req.params.id, value);
+        const curso = await cursoService.editarCurso(req.params.id, value, value.imagen);
 
         return res.status(curso.status).json(curso);
 
