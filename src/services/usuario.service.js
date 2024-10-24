@@ -6,6 +6,7 @@ const sendEmail = require("../utils/email/sendEmail");
 const crypto = require("crypto");
 
 const cargarArchivo = require('../services/cargarArchivo.service');
+const path = require('path');
 
 
 const JWTSecret = process.env.JWT_SECRET;
@@ -246,26 +247,42 @@ exports.eliminarUsuario = async (id) => {
 }
 
 exports.editarUsuario = async (id, datoUsuario, avatar) => {
-
   try {
     // Encuentra el usuario actual para obtener la ruta del avatar antiguo
     const usuarioActual = await usuarioModel.findById(id);
+
     // Si hay un nuevo avatar y un avatar antiguo, borra el antiguo
     if (avatar && usuarioActual.avatar) {
-      cargarArchivo.borrarAntiguaFoto(usuarioActual.avatar)
+      const oldAvatarPath = path.join(__dirname, '..', usuarioActual.avatar); 
+      cargarArchivo.borrarAntiguaFoto(oldAvatarPath);
     }
+
+    // Si no encuentra el usuario
     if (!usuarioActual) {
       return { status: 404, mensaje: "Usuario no encontrado" };
     }
-    const usuarioActualizado = await usuarioModel.findByIdAndUpdate(id, { nombre: datoUsuario.nombre, descripcion: datoUsuario.descripcion, avatar: avatar }, { new: true });
+
+    // Asegúrate de que 'avatar' cozntenga solo el nombre del archivo (ruta relativa)
+    const relativeAvatarPath = avatar ? `uploads/imagenes/${avatar}` : usuarioActual.avatar;
+
+    // Actualiza el usuario con la nueva información, incluyendo el avatar
+    const usuarioActualizado = await usuarioModel.findByIdAndUpdate(id, { 
+      nombre: datoUsuario.nombre, 
+      descripcion: datoUsuario.descripcion, 
+      avatar: relativeAvatarPath  // Guarda la ruta relativa
+    }, { new: true });
+
+    // Si no encuentra el usuario actualizado
     if (!usuarioActualizado) {
       return { status: 404, mensaje: "Usuario no encontrado" };
     }
+
     return { status: 200, mensaje: "Edición del usuario exitosa", data: usuarioActualizado };
   } catch (error) {
     return { status: 500, mensaje: error.message };
   }
 }
+
 
 
 

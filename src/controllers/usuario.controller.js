@@ -77,11 +77,20 @@ exports.eliminarUsuario = async (req, res) => {
 }
 
 exports.editarUsuario = async (req, res) => {
-        const avatar = req.file ? req.file.path : null;
+        // Aquí debes usar req.file.filename para obtener solo el nombre del archivo
+        const avatar = req.file ? req.file.filename : null;
+        console.log("Avatar: ", avatar);
+    
         const { error, value: datosValidados } = EditarUsuarioDTO.validate(req.body);
         if (error) {
-                return res.status(400).json({ error: error.details });
+            return res.status(400).json({ error: error.details });
         }
+    
+        console.log("Value:", datosValidados);
+    
+        // Llamada al servicio, pasando solo el nombre del archivo como 'avatar'
         const usuario = await usuarioService.editarUsuario(req.params.id, datosValidados, avatar);
+    
         return res.status(usuario.status).json(usuario);
-}
+    };
+    

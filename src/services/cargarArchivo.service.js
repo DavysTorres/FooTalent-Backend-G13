@@ -6,11 +6,12 @@ const fs = require('fs');
 //logica para la subida de arhivo
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadPath = path.join(__dirname, '..', 'uploads/imagenes');
-    cb(null, uploadPath);
+    const uploadPath = path.join(__dirname, '..', 'uploads/imagenes');  // Ruta donde se guardarán las imágenes
+    cb(null, uploadPath);  // Esto mantiene la ruta absoluta para almacenar, pero no para la base de datos
   },
   filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
+    const fileName = `${Date.now()}-${file.originalname}`;  // Solo el nombre del archivo
+    cb(null, fileName);  // Guardamos solo el nombre del archivo
   }
 });
 
