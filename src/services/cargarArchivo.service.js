@@ -1,6 +1,37 @@
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+//Agregó funcionalidad con cloudinary
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+
+// Configura Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
+});
+// Configura el almacenamiento con Cloudinary
+const storageCloudinary = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'uploads/imagenes', // Carpeta donde se almacenarán las imágenes en Cloudinary
+    public_id: (req, file) => `${Date.now()}-${file.originalname}`, // Nombre del archivo en Cloudinary
+    resource_type: 'image',
+  },
+});
+
+// Configura Multer con Cloudinary
+exports.upload = multer({ storage: storageCloudinary });
+
+
+
+
+
+
+
+
+
 
 
 //logica para la subida de arhivo

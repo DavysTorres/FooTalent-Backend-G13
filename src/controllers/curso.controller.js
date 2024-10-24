@@ -109,7 +109,7 @@ exports.mostrarCursosPorUsuario = async (req, res) => {
 exports.editarCurso = async (req, res) => {
     try {
         // Si hay una imagen en el request, añadirla al body
-        const imagen = req.file ? req.file.filename : null;
+        const imagen = req.file ? req.file.path : null;
         if (imagen) {
             req.body.imagen = imagen;
         }

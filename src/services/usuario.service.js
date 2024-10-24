@@ -252,18 +252,18 @@ exports.editarUsuario = async (id, datoUsuario, avatar) => {
     const usuarioActual = await usuarioModel.findById(id);
 
     // Si hay un nuevo avatar y un avatar antiguo, borra el antiguo
-    if (avatar && usuarioActual.avatar) {
+    /*if (avatar && usuarioActual.avatar) {
       const oldAvatarPath = path.join(__dirname, '..', usuarioActual.avatar); 
       cargarArchivo.borrarAntiguaFoto(oldAvatarPath);
     }
-
+*/
     // Si no encuentra el usuario
     if (!usuarioActual) {
       return { status: 404, mensaje: "Usuario no encontrado" };
     }
 
     // Asegúrate de que 'avatar' cozntenga solo el nombre del archivo (ruta relativa)
-    const relativeAvatarPath = avatar ? `uploads/imagenes/${avatar}` : usuarioActual.avatar;
+    const relativeAvatarPath = avatar ? `${avatar}` : usuarioActual.avatar;
 
     // Actualiza el usuario con la nueva información, incluyendo el avatar
     const usuarioActualizado = await usuarioModel.findByIdAndUpdate(id, { 
