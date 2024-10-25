@@ -34,6 +34,7 @@ const MostrarTodosCursosDTO = Joi.array().items(
     nombre: Joi.string().required(),
     descripcion: Joi.string().required(),
     imagen: Joi.string().allow(null).optional(),
+    activo:Joi.boolean().required(),
 
     docenteId: Joi.object({
       _id: Joi.custom((value, helpers) => {
@@ -81,6 +82,7 @@ const MostrarTodosCursosPorIDDTO =
     nombre: Joi.string().required(),
     descripcion: Joi.string().required(),
     imagen: Joi.string().allow(null).optional(),
+    activo: Joi.boolean().required(),
     que_aprenderas: Joi.string().optional(),
     requisitos: Joi.string().optional(),
     razon_eleccion: Joi.string().optional(),
