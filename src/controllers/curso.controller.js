@@ -80,6 +80,13 @@ exports.mostrarCursoPorId = async (req, res) => {
 exports.mostrarCursosPorUsuario = async (req, res) => {
     try {
         const curso = await cursoService.mostrarCursosPorUsuario(req.params.id);
+
+        if (!curso || !curso.data || curso.data.length === 0) {
+            return res.status(404).json({
+                status: 'error',
+                mensaje: 'No se encontraron cursos para este usuario',
+            });
+        }
         const cursos = curso.data.map(curso => curso.toObject());
         // Aplicar el DTO para validar y estructurar la respuesta
         const { error, value } = MostrarTodosCursosDTO.validate(cursos);

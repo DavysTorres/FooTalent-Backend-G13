@@ -64,7 +64,7 @@ exports.mostrarCursosPorUsuario = async (id) => {
     if (!usuario) {
       return { mensaje: 'Usuario no encontrado' };
     }
-    const cursosProfesor = await cursoModel.find({ docenteId: { $type: 'objectId' } })
+    const cursosProfesor = await cursoModel.find({ docenteId: id })
       .populate({
         path: 'docenteId',
         select: '_id nombre',
