@@ -77,20 +77,25 @@ exports.eliminarUsuario = async (req, res) => {
 }
 
 exports.editarUsuario = async (req, res) => {
-        // Aquí debes usar req.file.filename para obtener solo el nombre del archivo
-        const avatar = req.file ? req.file.path : null;
-      
-    
-        const { error, value: datosValidados } = EditarUsuarioDTO.validate(req.body);
-        if (error) {
+        try {
+          // Verifica si hay un archivo cargado y usa la URL pública de Cloudinary
+          const avatar = req.file ? req.file.path : null; // Usamos el path devuelto por Cloudinary
+          
+          // Validación de los datos del cuerpo (req.body)
+          const { error, value: datosValidados } = EditarUsuarioDTO.validate(req.body);
+          if (error) {
             return res.status(400).json({ error: error.details });
+          }
+      
+          // Llamada al servicio, pasando solo la URL del avatar (si hay un archivo cargado)
+          const usuario = await usuarioService.editarUsuario(req.params.id, datosValidados, avatar);
+          
+          // Respuesta exitosa
+          return res.status(usuario.status).json(usuario);
+        } catch (error) {
+          // Manejo de errores
+          console.error(error);
+          return res.status(500).json({ mensaje: 'Error al editar el usuario', error: error.message });
         }
-    
-        
-    
-        // Llamada al servicio, pasando solo el nombre del archivo como 'avatar'
-        const usuario = await usuarioService.editarUsuario(req.params.id, datosValidados, avatar);
-    
-        return res.status(usuario.status).json(usuario);
-    };
+      };
     

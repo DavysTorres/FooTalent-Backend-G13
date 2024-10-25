@@ -5,24 +5,55 @@ const fs = require('fs');
 const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
-// Configura Cloudinary
+// Configura Cloudinary con las variables de entorno
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.API_KEY,
   api_secret: process.env.API_SECRET,
 });
-// Configura el almacenamiento con Cloudinary
+
+// Configura el almacenamiento en Cloudinary con `multer-storage-cloudinary`
 const storageCloudinary = new CloudinaryStorage({
   cloudinary: cloudinary,
-  params: {
-    folder: 'uploads/imagenes', // Carpeta donde se almacenarán las imágenes en Cloudinary
-    public_id: (req, file) => `${Date.now()}-${file.originalname}`, // Nombre del archivo en Cloudinary
-    resource_type: 'image',
+  params: async (req, file) => {
+    return {
+      folder: 'uploads/imagenes',    // Carpeta donde se almacenarán las imágenes
+      public_id: `${Date.now()}-${file.originalname}`,  // Genera un nombre único para cada archivo
+      resource_type: 'image',        // Especifica el tipo de archivo (imagen)
+    };
   },
 });
 
 // Configura Multer con Cloudinary
-exports.upload = multer({ storage: storageCloudinary });
+const upload = multer({
+  storage: storageCloudinary,
+  limits: { fileSize: 5 * 1024 * 1024 }, // Limita el tamaño del archivo a 5MB
+  fileFilter: (req, file, cb) => {
+    // Verifica que el archivo sea una imagen
+    const filetypes = /jpeg|jpg|png/;
+    const mimetype = filetypes.test(file.mimetype);
+    const extname = filetypes.test(file.originalname.toLowerCase());
+
+    if (mimetype && extname) {
+      return cb(null, true);
+    }
+    cb(new Error('Error: Solo se permiten imágenes (jpeg, jpg, png)'));
+  },
+});
+
+// Middleware para manejar la carga de imágenes y errores
+exports.uploadFile = (req, res, next) => {
+  upload.single('avatar')(req, res, (err) => {
+    if (err instanceof multer.MulterError) {
+      // Errores específicos de Multer (como tamaño de archivo excesivo)
+      return res.status(400).json({ mensaje: 'Error al subir el archivo', error: err.message });
+    } else if (err) {
+      // Otros errores (como tipo de archivo no permitido)
+      return res.status(400).json({ mensaje: 'Error de validación', error: err.message });
+    }
+    next(); // Si no hay errores, pasa al siguiente middleware
+  });
+};
 
 
 
