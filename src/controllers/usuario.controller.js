@@ -1,6 +1,10 @@
 //cSpell: disable
 const { RegistrarUsuarioDTO, EditarUsuarioDTO, MostrarUsuarioPorIdDTO } = require('../dto/usuario.dto');
+const { upload } = require('../services/cargarArchivo.service');
+
+const { subirArchivoACloudinary } = require('../services/cloudinary.service');
 const usuarioService = require('../services/usuario.service');
+const multer = require('multer');
 
 exports.registroUsuario = async (req, res) => {
         const { error, value: datosValidados } = RegistrarUsuarioDTO.validate(req.body);
@@ -77,25 +81,35 @@ exports.eliminarUsuario = async (req, res) => {
 }
 
 exports.editarUsuario = async (req, res) => {
-        try {
-          // Verifica si hay un archivo cargado y usa la URL pública de Cloudinary
-          const avatar = req.file ? req.file.path : null; // Usamos el path devuelto por Cloudinary
-          
-          // Validación de los datos del cuerpo (req.body)
-          const { error, value: datosValidados } = EditarUsuarioDTO.validate(req.body);
-          if (error) {
-            return res.status(400).json({ error: error.details });
+        upload.single('avatar')(req, res, async (err) => {
+          if (err) {
+            return res.status(400).json({ mensaje: "Error al subir el archivo", error: err.message });
           }
       
-          // Llamada al servicio, pasando solo la URL del avatar (si hay un archivo cargado)
-          const usuario = await usuarioService.editarUsuario(req.params.id, datosValidados, avatar);
-          
-          // Respuesta exitosa
-          return res.status(usuario.status).json(usuario);
-        } catch (error) {
-          // Manejo de errores
-          console.error(error);
-          return res.status(500).json({ mensaje: 'Error al editar el usuario', error: error.message });
-        }
+          try {
+            const file = req.file;
+            const userId = req.params.id;
+            
+            // Validar datos de usuario (req.body)
+            const { error, value: datosValidados } = EditarUsuarioDTO.validate(req.body);
+            if (error) {
+              return res.status(400).json({ error: error.details });
+            }
+      
+            let avatarUrl = null;
+            if (file) {
+              // Subir el archivo a Cloudinary
+              const resultado = await subirArchivoACloudinary(file.buffer, userId);
+              avatarUrl = resultado.url;
+            }
+      
+            // Llamar al servicio para actualizar el usuario
+            const usuario = await usuarioService.editarUsuario(userId, datosValidados, avatarUrl);
+      
+            return res.status(usuario.status).json(usuario);
+          } catch (error) {
+            console.error(error);
+            return res.status(500).json({ mensaje: 'Error al procesar la solicitud', error: error.message });
+          }
+        });
       };
-    

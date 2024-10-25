@@ -6,12 +6,14 @@ const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
 // Configura Cloudinary con las variables de entorno
-cloudinary.config({
+/*cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.API_KEY,
   api_secret: process.env.API_SECRET,
 });
+*/
 
+/*
 // Configura el almacenamiento en Cloudinary con `multer-storage-cloudinary`
 const storageCloudinary = new CloudinaryStorage({
   cloudinary: cloudinary,
@@ -23,9 +25,9 @@ const storageCloudinary = new CloudinaryStorage({
     };
   },
 });
-
+*/
 // Configura Multer con Cloudinary
-const upload = multer({
+/*const upload = multer({
   storage: storageCloudinary,
   limits: { fileSize: 5 * 1024 * 1024 }, // Limita el tamaño del archivo a 5MB
   fileFilter: (req, file, cb) => {
@@ -40,9 +42,9 @@ const upload = multer({
     cb(new Error('Error: Solo se permiten imágenes (jpeg, jpg, png)'));
   },
 });
-
+*/
 // Middleware para manejar la carga de imágenes y errores
-exports.uploadFile = (req, res, next) => {
+/*exports.uploadFile = (req, res, next) => {
   upload.single('avatar')(req, res, (err) => {
     if (err instanceof multer.MulterError) {
       // Errores específicos de Multer (como tamaño de archivo excesivo)
@@ -54,6 +56,15 @@ exports.uploadFile = (req, res, next) => {
     next(); // Si no hay errores, pasa al siguiente middleware
   });
 };
+*/
+
+
+
+// Configura almacenamiento en memoria con multer
+const storageCloudinary = multer.memoryStorage();
+ exports.upload = multer({ storageCloudinary });
+
+// Exporta la configuración de multer
 
 
 

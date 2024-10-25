@@ -18,7 +18,7 @@ router.get('/mostrarUsuarioPorId/:id', usuarioController.consultarUsuarioPorId);
 //Elimina un usuario de forma logica
 router.delete('/eliminar/:id', usuarioController.eliminarUsuario);
 //Edita un usuario
-router.put('/editar/:id', uploadFile, usuarioController.editarUsuario);
+router.put('/editar/:id', usuarioController.editarUsuario);
 //Peticion para comenzar un reestablecimiento de contraseña
 router.post("/requestResetPassword", usuarioController.resetPasswordRequestController1);
 //Reestablecimiento de contraseña 
