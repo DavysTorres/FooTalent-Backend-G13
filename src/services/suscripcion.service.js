@@ -22,7 +22,7 @@ exports.generarSuscripcion = async (usuarioId, cursoId) => {
     // Verificar si el usuario ya está suscrito al curso
     const suscripcionExistente = await suscripcionModel.findOne({ aprendizId: usuarioId, cursos: cursoId });
     if (suscripcionExistente) {
-      return { mensaje: 'El usuario ya está suscrito a este curso' };
+      return { mensaje: 'El usuario ya está suscrito a este curso', status:409};
     }
 
     // Crear la nueva suscripción
