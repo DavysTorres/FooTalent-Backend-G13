@@ -128,6 +128,7 @@ const MostrarTodosCursosPorIDDTO =
     razon_eleccion: Joi.string().max(500).optional(),
     informacion_adicional: Joi.string().max(500).optional(),
     duracion: Joi.string().max(500).optional(),
+    requisitos: Joi.string().max(500).optional(),
   }).options({ stripUnknown: true });
 
 
