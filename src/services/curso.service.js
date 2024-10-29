@@ -42,7 +42,7 @@ exports.mostrarCursoPorId = async (id) => {
     const curso = await cursoModel.findById(id).populate(
       {
         path: 'docenteId',
-        select: '_id nombre descripcion'
+        select: '_id nombre descripcion role'
       }
     );
 

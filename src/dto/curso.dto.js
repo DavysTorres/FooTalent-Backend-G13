@@ -98,6 +98,7 @@ const MostrarTodosCursosPorIDDTO =
       }).optional(),
       nombre: Joi.string().allow('').optional(),  // Permite valores vacíos
       descripcion: Joi.string().allow('').optional(),  // Permite valores vacíos
+      role: Joi.string().required()
     }).optional(),
 
     createdAt: Joi.date().required(),
