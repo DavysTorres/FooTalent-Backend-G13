@@ -10,7 +10,6 @@ const ClaseSchema = new Schema({
     },
     descripcion: {
         type: String,
-        required: true
     },
     video:{
         type:String
