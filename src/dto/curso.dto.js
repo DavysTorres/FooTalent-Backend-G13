@@ -13,11 +13,11 @@ const CrearCursoDTO = Joi.object({
     }
     return value;
   }).required(),
-  que_aprenderas: Joi.string().optional(),
-    requisitos: Joi.string().optional(),
-    razon_eleccion: Joi.string().optional(),
-    informacion_adicional: Joi.string().optional(),
-    duracion: Joi.string().optional(),
+  que_aprenderas: Joi.string().allow('').optional(),
+    requisitos: Joi.string().allow('').optional(),
+    razon_eleccion: Joi.string().allow('').optional(),
+    informacion_adicional: Joi.string().allow('').optional(),
+    duracion: Joi.string().allow('').optional(),
 
 }).options({ stripUnknown: true });
 
