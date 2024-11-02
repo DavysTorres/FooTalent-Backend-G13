@@ -76,3 +76,18 @@ exports.mostrarClasePorId = async (id) => {
     return { status: 500, mensaje: error.message };
   }
 };
+
+exports.mostrarClase = async (id) => {
+  try {
+
+    const clase = await claseModel.findById(id)
+
+    if (!clase) {
+      return { status: 404, mensaje: 'Clase no encontradas' };
+    }
+
+    return { status: 200, mensaje: 'Clase encontrada', data: clase };
+  } catch (error) {
+    return { status: 500, mensaje: error.message };
+  }
+};

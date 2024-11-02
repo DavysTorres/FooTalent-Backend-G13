@@ -21,3 +21,8 @@ exports.mostrarClasePorId = async (req, res) => {
     const clase = await claseService.mostrarClasePorId(req.params.id);
     return res.status(clase.status).json(clase);
 };
+
+exports.mostrarClase = async (req, res) => {
+    const clase = await claseService.mostrarClase(req.params.id);
+    return res.status(clase.status).json(clase);
+};

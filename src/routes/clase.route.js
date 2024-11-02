@@ -10,8 +10,10 @@ router.post('/', claseController.crearClase);
 router.delete('/:id', claseController.eliminarClase);
 //Edita la informacion de una clase
 router.put('/:id',cargarDocumentos.array('documentos', 3), claseController.editarClase);
-//Muestra una clase según el ID del curso
+//Muestra las clases según el ID del curso
 router.get('/:id', claseController.mostrarClasePorId);
+//Muestra una clase según ID de la clase
+router.get('/clase/:id', claseController.mostrarClase);
 
 
 
